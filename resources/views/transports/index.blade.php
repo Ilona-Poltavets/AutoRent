@@ -7,7 +7,7 @@
             {{$success}}
         </div>
     @endif
-    <table class="table">
+    <table class="table table-hover">
         <thead>
         <tr>
             <th>#</th>
@@ -26,6 +26,7 @@
                 <td>{{$transport->mileage}}</td>
                 <td>
                     <div class="btn-group">
+                        <a href="{{route('transport.show',$transport->id)}}" class="btn btn-info">Show</a>
                         <a href="{{route('transport.edit', $transport->id)}}" class="btn btn-primary">Edit</a>
                         <a href="#" class="btn btn-danger">Delete</a>
                     </div>
@@ -34,5 +35,6 @@
         @endforeach
         </tbody>
     </table>
+    <a href="{{route('currently_rented')}}" class="btn btn-dark">Currently rented</a>
     <a href="{{route('transport.create')}}" class="btn btn-success">Add</a>
 @endsection

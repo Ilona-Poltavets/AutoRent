@@ -2,6 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
+use OpenApi\Attributes as OA;
+
+#[OA\Info(title: "My First API", version: "0.1")]
+class OpenApi
+{
+}
+
 use App\Models\CarBodyType;
 use App\Models\Country;
 use App\Models\Owner;
@@ -12,9 +20,9 @@ use Illuminate\Support\Facades\Validator;
 class TransportController extends Controller
 {
     const VALIDATION_RULE = [
-        'model' => 'require',
-        'number' => 'require|alpha_num',
-        'mileage' => 'require|integer|max:10000000|min:0',
+        'model' => 'required',
+        'number' => 'required|alpha_num',
+        'mileage' => 'required|integer|max:10000000|min:0',
         'owner_id' => 'required',
         'body_type_id' => 'required',
         'country_id' => 'required',
@@ -61,6 +69,7 @@ class TransportController extends Controller
         $transport->country_id = $request->country_id;
         $transport->body_type_id = $request->body_type_id;
         $transport->owner_id = $request->owner_id;
+        $transport->timestamps = false;
         $transport->save();
         //return response()->json($transport);
         return redirect()->route('transport.index')->with('successMsg', 'Transport has been created successfully');
@@ -74,6 +83,7 @@ class TransportController extends Controller
      */
     public function show(Transport $transport)
     {
+        return view('transports.show', compact('transport'));
         //return $this->edit($transport);
     }
 
@@ -88,7 +98,7 @@ class TransportController extends Controller
         $countries = Country::all();
         $owners = Owner::all();
         $carBodyTypes = CarBodyType::all();
-        return view('transports.edit', compact('transport'),['countries' => $countries, 'owners' => $owners, 'carBodyTypes' => $carBodyTypes]);
+        return view('transports.edit', compact('transport'), ['countries' => $countries, 'owners' => $owners, 'carBodyTypes' => $carBodyTypes]);
     }
 
     /**
@@ -98,7 +108,7 @@ class TransportController extends Controller
      * @param \App\Models\Transport $transport
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
         $request->validate(self::VALIDATION_RULE);
 
@@ -109,9 +119,23 @@ class TransportController extends Controller
         $transport->country_id = $request->country_id;
         $transport->body_type_id = $request->body_type_id;
         $transport->owner_id = $request->owner_id;
+        $transport->timestamps = false;
         $transport->update();
         //return response()->json($transport);
         return redirect('/transport')->with('success', 'Transport has been created successfully');
+    }
+
+    public function create_view()
+    {
+        DB::unprepared("create view car_owner_tenant as
+        select transports.model, owners.name owner, tenants.name tenant, DATEADD(day,rents.rental_period,rents.date) end_date_rent
+        from transports inner join owners on transports.owner_id=owners.id
+        inner join rents on rents.id_transport=transports.id
+        inner join tenants on tenants.id=rents.id_tenant
+        where DATEADD(day,rents.rental_period,rents.date)>GETDATE()");
+        $car_owner_tenant = DB::select("select * from car_owner_tenant");
+        DB::unprepared("drop view car_owner_tenant");
+        return view('query.view', ['table' => $car_owner_tenant]);
     }
 
     /**

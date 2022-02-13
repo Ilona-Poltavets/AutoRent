@@ -5,21 +5,21 @@
             <div class="form-group row my-2">
                 <label for="model" class="col-2 col-form-label">Model</label>
                 <div class="col-10">
-                    <input id="model" class="form-control" type="text" value="{{isset($transport)?$transport->model:''}}"/>
+                    <input id="model" name="model" class="form-control" type="text" value="{{isset($transport)?$transport->model:''}}"/>
                 </div>
             </div>
 
             <div class="form-group row my-2">
                 <label for="number" class="col-2 col-form-label">Number</label>
                 <div class="col-10">
-                    <input id="number" class="form-control" type="text" value="{{isset($transport)?$transport->number:''}}"/>
+                    <input id="number" name="number" class="form-control" type="text" value="{{isset($transport)?$transport->number:''}}"/>
                 </div>
             </div>
 
             <div class="form-group row my-2">
                 <label for="mileage" class="col-2 col-form-label">Mileage</label>
                 <div class="col-10">
-                    <input id="mileage" class="form-control" type="number" value="{{isset($transport)?$transport->mileage:''}}"/>
+                    <input id="mileage" name="mileage" class="form-control" type="number" value="{{isset($transport)?$transport->mileage:''}}"/>
                 </div>
             </div>
 

@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transport extends Model
 {
-    protected $fillable = [
+    /*protected $fillable = [
         'model',
-        'number',
+       'number',
         'mileage',
         'owner_id',
         'body_type_id',
         'country_id',
-    ];
+    ];*/
     use HasFactory;
 }
