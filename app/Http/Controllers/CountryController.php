@@ -7,24 +7,28 @@ use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
+    const VALIDATION_RULE=[
+        'name'=>'required'
+    ];
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index()
     {
-        //
+        $data['countries']=Country::paginate(20);
+        return view('countries.index',$data);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function create()
     {
-        //
+        return view('countries.create');
     }
 
     /**
@@ -35,7 +39,12 @@ class CountryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(self::VALIDATION_RULE);
+        $country=new Country();
+        $country->name=$request->name;
+        $country->timestamps = false;
+        $country->save();
+        return redirect()->route('countries.index')->with('successMsg', 'Country has been created successfully');
     }
 
     /**
@@ -46,7 +55,7 @@ class CountryController extends Controller
      */
     public function show(Country $country)
     {
-        //
+        return view('countries.show',compact('country'));
     }
 
     /**
@@ -57,7 +66,7 @@ class CountryController extends Controller
      */
     public function edit(Country $country)
     {
-        //
+        return view('countries.edit', compact('country'));
     }
 
     /**
@@ -67,9 +76,14 @@ class CountryController extends Controller
      * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Country $country)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate(self::VALIDATION_RULE);
+        $country=Country::find($id);
+        $country->name=$request->name;
+        $country->timestamps = false;
+        $country->save();
+        return redirect()->route('country.index')->with('successMsg', 'Country has been edited successfully');
     }
 
     /**
@@ -80,6 +94,7 @@ class CountryController extends Controller
      */
     public function destroy(Country $country)
     {
-        //
+        $country->delete();
+        return redirect()->route('country.index')->with('successMsg', 'Country has been deleted successfully');
     }
 }

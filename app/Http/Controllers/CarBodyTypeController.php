@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CarBodyType;
 use Illuminate\Http\Request;
+use function Symfony\Component\String\upper;
 
 class CarBodyTypeController extends Controller
 {
@@ -14,7 +15,8 @@ class CarBodyTypeController extends Controller
      */
     public function index()
     {
-        //
+        $data['types']=CarBodyType::all();
+        return view('car_body_types.index',$data);
     }
 
     /**
@@ -24,7 +26,7 @@ class CarBodyTypeController extends Controller
      */
     public function create()
     {
-        //
+        return view('car_body_types.create');
     }
 
     /**
@@ -35,7 +37,14 @@ class CarBodyTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'=>'required',
+        ]);
+        $type=new CarBodyType();
+        $type->name=strtoupper($request->name);
+        $type->timestamps=false;
+        $type->save();
+        return redirect()->route('carBodyType.index')->with('successMsg','Type has been created successfully');
     }
 
     /**
@@ -46,7 +55,7 @@ class CarBodyTypeController extends Controller
      */
     public function show(CarBodyType $carBodyType)
     {
-        //
+        return view('car_body_types.show',compact('carBodyType'));
     }
 
     /**
@@ -57,7 +66,7 @@ class CarBodyTypeController extends Controller
      */
     public function edit(CarBodyType $carBodyType)
     {
-        //
+        return view('car_body_types.edit',compact('carBodyType'));
     }
 
     /**
@@ -67,9 +76,16 @@ class CarBodyTypeController extends Controller
      * @param  \App\Models\CarBodyType  $carBodyType
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CarBodyType $carBodyType)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name'=>'required',
+        ]);
+        $type=CarBodyType::find($id);
+        $type->name=strtoupper($request->name);
+        $type->timestamps=false;
+        $type->save();
+        return redirect()->route('carBodyType.index')->with('successMsg','Type has been edited successfully');
     }
 
     /**
@@ -80,6 +96,7 @@ class CarBodyTypeController extends Controller
      */
     public function destroy(CarBodyType $carBodyType)
     {
-        //
+        $carBodyType->delete();
+        return redirect()->route('carBodyType.index')->with('successMsg','Type has been deleted successfully');
     }
 }

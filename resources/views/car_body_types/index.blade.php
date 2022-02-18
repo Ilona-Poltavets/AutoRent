@@ -1,5 +1,5 @@
 @extends('layouts.mainLayout')
-@section('title','Transports')
+@section('title','Car body Types')
 @section('content')
     <h1 class="text-center">Car body types</h1>
     @if (!empty($success))
@@ -16,7 +16,7 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($carBodyTypes as $type)
+        @foreach($types as $type)
             <tr>
                 <td>{{$type->id}}</td>
                 <td>{{$type->name}}</td>
@@ -24,7 +24,11 @@
                     <div class="btn-group">
                         <a href="{{route('carBodyType.show',$type->id)}}" class="btn btn-info">Show</a>
                         <a href="{{route('carBodyType.edit', $type->id)}}" class="btn btn-primary">Edit</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
+                        <form action="{{route('carBodyType.destroy',$type->id)}}" method="post">
+                            @method('delete')
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
                     </div>
                 </td>
             </tr>

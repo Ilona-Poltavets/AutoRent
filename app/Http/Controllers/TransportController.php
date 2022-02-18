@@ -3,19 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-use OpenApi\Attributes as OA;
-
-#[OA\Info(title: "My First API", version: "0.1")]
-class OpenApi
-{
-}
-
 use App\Models\CarBodyType;
 use App\Models\Country;
 use App\Models\Owner;
 use App\Models\Transport;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class TransportController extends Controller
 {
@@ -35,7 +27,7 @@ class TransportController extends Controller
      */
     public function index()
     {
-        $data['transports'] = Transport::all();
+        $data['transports'] = Transport::paginate(20);
         return view('transports.index', $data);
     }
 
@@ -146,6 +138,7 @@ class TransportController extends Controller
      */
     public function destroy(Transport $transport)
     {
-        //
+        $transport->delete();
+        return redirect()->route('transport.index')->with('successMsg', 'Transport has been deleted successfully');
     }
 }

@@ -28,13 +28,18 @@
                     <div class="btn-group">
                         <a href="{{route('transport.show',$transport->id)}}" class="btn btn-info">Show</a>
                         <a href="{{route('transport.edit', $transport->id)}}" class="btn btn-primary">Edit</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
+                        <form action="{{route('transport.destroy', $transport->id)}}" method="post">
+                            @method('delete')
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
                     </div>
                 </td>
             </tr>
         @endforeach
         </tbody>
     </table>
+    {!! $transports->links() !!}
     <a href="{{route('currently_rented')}}" class="btn btn-dark">Currently rented</a>
     <a href="{{route('transport.create')}}" class="btn btn-success">Add</a>
 @endsection

@@ -1,7 +1,7 @@
 @extends('layouts.mainLayout')
-@section('title','Transports')
+@section('title','Countries')
 @section('content')
-    <h1 class="text-center">Transports</h1>
+    <h1 class="text-center">Countries</h1>
     @if (!empty($success))
         <div class="alert alert-success">
             {{$success}}
@@ -11,30 +11,30 @@
         <thead>
         <tr>
             <th>#</th>
-            <th>Model</th>
-            <th>Number</th>
-            <th>Mileage</th>
+            <th>Name</th>
             <th></th>
         </tr>
         </thead>
         <tbody>
-        @foreach($transports as $transport)
+        @foreach($countries as $country)
             <tr>
-                <td>{{$transport->id}}</td>
-                <td>{{$transport->model}}</td>
-                <td>{{$transport->number}}</td>
-                <td>{{$transport->mileage}}</td>
+                <td>{{$country->id}}</td>
+                <td>{{$country->name}}</td>
                 <td>
                     <div class="btn-group">
-                        <a href="{{route('transport.show',$transport->id)}}" class="btn btn-info">Show</a>
-                        <a href="{{route('transport.edit', $transport->id)}}" class="btn btn-primary">Edit</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
+                        <a href="{{route('country.show',$country->id)}}" class="btn btn-info">Show</a>
+                        <a href="{{route('country.edit', $country->id)}}" class="btn btn-primary">Edit</a>
+                        <form action="{{route('country.destroy', $country->id)}}" method="post">
+                            @method('delete')
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
                     </div>
                 </td>
             </tr>
         @endforeach
         </tbody>
     </table>
-    <a href="{{route('currently_rented')}}" class="btn btn-dark">Currently rented</a>
-    <a href="{{route('transport.create')}}" class="btn btn-success">Add</a>
+    {!! $countries->links() !!}
+    <a href="{{route('country.create')}}" class="btn btn-success">Add</a>
 @endsection

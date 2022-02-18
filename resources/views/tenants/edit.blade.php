@@ -1,7 +1,7 @@
 @extends('layouts.mainLayout')
-@section('title','Edit transport')
+@section('title','Edit tenant')
 @section('content')
-    <h1 class="text-center">Edit transport</h1>
+    <h1 class="text-center">Edit tenant</h1>
     @if ($errors->any())
         <div class="alert alert-danger">
             <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -12,9 +12,9 @@
             </ul>
         </div>
     @endif
-    <form method="post" action="{{ route('transport.update',$transport->id) }}" >
+    <form method="post" action="{{ route('tenant.update',$tenant->id) }}" >
         @method('PATCH')
         @csrf
-        @include('transports.form')
+        @include('tenants.form')
     </form>
 @endsection

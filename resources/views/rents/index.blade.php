@@ -1,7 +1,7 @@
 @extends('layouts.mainLayout')
-@section('title','Transports')
+@section('title','Rents')
 @section('content')
-    <h1 class="text-center">Transports</h1>
+    <h1 class="text-center">Rents</h1>
     @if (!empty($success))
         <div class="alert alert-success">
             {{$success}}
@@ -11,30 +11,38 @@
         <thead>
         <tr>
             <th>#</th>
-            <th>Model</th>
-            <th>Number</th>
-            <th>Mileage</th>
+            <th>Start date</th>
+            <th>Transport</th>
+            <th>Tenant</th>
+            <th>Rental period</th>
+            <th>Owner</th>
             <th></th>
         </tr>
         </thead>
         <tbody>
-        @foreach($transports as $transport)
+        @foreach($rents as $rent)
             <tr>
-                <td>{{$transport->id}}</td>
-                <td>{{$transport->model}}</td>
-                <td>{{$transport->number}}</td>
-                <td>{{$transport->mileage}}</td>
+                <td>{{$rent->id}}</td>
+                <td>{{$rent->date}}</td>
+                <td>{{\App\Models\Transport::find($rent->id_transport)->model}}</td>
+                <td>{{\App\Models\Tenant::find($rent->id_tenant)->name}}</td>
+                <td>{{$rent->rental_period}}</td>
+                <td>{{\App\Models\Owner::find($rent->id_owner)->name}}</td>
                 <td>
                     <div class="btn-group">
-                        <a href="{{route('transport.show',$transport->id)}}" class="btn btn-info">Show</a>
-                        <a href="{{route('transport.edit', $transport->id)}}" class="btn btn-primary">Edit</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
+                        <a href="{{route('rent.show',$rent->id)}}" class="btn btn-info">Show</a>
+                        <a href="{{route('rent.edit', $rent->id)}}" class="btn btn-primary">Edit</a>
+                        <form action="{{route('rent.destroy', $rent->id)}}" method="post">
+                            @method('delete')
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
                     </div>
                 </td>
             </tr>
         @endforeach
         </tbody>
     </table>
-    <a href="{{route('currently_rented')}}" class="btn btn-dark">Currently rented</a>
-    <a href="{{route('transport.create')}}" class="btn btn-success">Add</a>
+    {!! $rents->links() !!}
+    <a href="{{route('rent.create')}}" class="btn btn-success">Add</a>
 @endsection

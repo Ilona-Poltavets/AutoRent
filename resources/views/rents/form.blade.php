@@ -1,85 +1,86 @@
-<div class="card p-2">
-    <div class="card-body">
-        <div class="card p-2 mb-2 form-card-background">
+<div class="card p-2 mb-2 form-card-background">
 
-            <div class="form-group row my-2">
-                <label for="model" class="col-2 col-form-label">Model</label>
-                <div class="col-10">
-                    <input id="model" name="model" class="form-control" type="text" value="{{isset($transport)?$transport->model:''}}"/>
-                </div>
-            </div>
+    <div class="form-group row my-2">
+        <label for="date" class="col-2 col-form-label">Start date</label>
+        <div class="col-10">
+            <input id="date" name="date" class="date form-control" type="text" value="{{isset($rent)?$rent->data:''}}">
+        </div>
+    </div>
 
-            <div class="form-group row my-2">
-                <label for="number" class="col-2 col-form-label">Number</label>
-                <div class="col-10">
-                    <input id="number" name="number" class="form-control" type="text" value="{{isset($transport)?$transport->number:''}}"/>
-                </div>
-            </div>
+    <script type="text/javascript">
+        $('.date').datepicker({
+            format: 'mm-dd-yyyy'
+        });
+    </script>
 
-            <div class="form-group row my-2">
-                <label for="mileage" class="col-2 col-form-label">Mileage</label>
-                <div class="col-10">
-                    <input id="mileage" name="mileage" class="form-control" type="number" value="{{isset($transport)?$transport->mileage:''}}"/>
-                </div>
-            </div>
+    <div class="form-group row my-2">
+        <label for="rental_period" class="col-2 col-form-label">Rental period</label>
+        <div class="col-10">
+            <input id="rental_period" name="rental_period" class="form-control" type="number"
+                   value="{{isset($rent)?$rent->rental_period:''}}"/>
+        </div>
+    </div>
 
-            <div class="form-group row my-2">
-                <label for="mileage" class="col-2 col-form-label">Manufacturer country</label>
-                <div class="col-10">
-                    <select class="form-select" name="country_id">
-                        <option
-                            {{isset($transport)? '':'selected'}} disabled>Country
-                        </option>
-                        @foreach($countries as $country)
-                            <option
-                                {{isset($transport)? ($transport->country_id==$country->id ? 'selected':''):''}} value="{{$country->id}}">{{$country->name}}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
+    <div class="form-group row my-2">
+        <label for="id_transport" class="col-2 col-form-label">Transport</label>
+        <div class="col-10">
+            <select class="form-select" name="id_transport">
+                <option
+                    {{isset($rent)? '':'selected'}} disabled>Transport
+                </option>
+                @foreach($transports as $transport)
+                    <option
+                        @if(isset($rent))
+                            {{$rent->id_transport==$transport->id ? 'selected':''}}
+                        @else
+                            {{''}}
+                        @endif
+                        value="{{$transport->id}}">{{$transport->model}}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
 
-            <div class="form-group row my-2">
-                <label for="body_type" class="col-2 col-form-label">Body type</label>
-                <div class="col-10">
-                    <select class="form-select" name="body_type_id">
-                        <option
-                            {{isset($transport)? '':'selected'}} disabled>Body type
-                        </option>
-                        @foreach($carBodyTypes as $bodyType)
-                            <option
-                                {{isset($transport)? ($transport->body_type_id==$bodyType->id ? 'selected':''):''}} value="{{$bodyType->id}}">{{$bodyType->name}}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
+    <div class="form-group row my-2">
+        <label for="id_tenant" class="col-2 col-form-label">Tenant</label>
+        <div class="col-10">
+            <select class="form-select" name="id_tenant">
+                <option
+                    {{isset($rent)? '':'selected'}} disabled>Tenant
+                </option>
+                @foreach($tenants as $tenant)
+                    <option
+                        {{isset($rent)? ($rent->id_tenant==$tenant->id ? 'selected':''):''}} value="{{$tenant->id}}">{{$tenant->name}}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
 
-            <div class="form-group row my-2">
-                <label for="owner" class="col-2 col-form-label">Owner</label>
-                <div class="col-10">
-                    <select class="form-select" name="owner_id">
-                        <option
-                            {{isset($transport)? '':'selected'}} disabled>Owner
-                        </option>
-                        @foreach($owners as $owner)
-                            <option
-                                {{isset($transport)? ($transport->owner_id==$owner->id ? 'selected':''):''}} value="{{$owner->id}}">{{$owner->name}}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
+    <div class="form-group row my-2">
+        <label for="id_owner" class="col-2 col-form-label">Owner</label>
+        <div class="col-10">
+            <select class="form-select" name="id_owner">
+                <option
+                    {{isset($rent)? '':'selected'}} disabled>Owner
+                </option>
+                @foreach($owners as $owner)
+                    <option
+                        {{isset($rent)? ($rent->id_owner==$owner->id ? 'selected':''):''}} value="{{$owner->id}}">{{$owner->name}}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
 
-            <div class="row my-2">
-                <div class="offset-10 col-1">
-                    <a class="btn btn-danger float-right" href="{{ URL::previous() }}">Cancel</a>
-                </div>
+    <div class="row my-2">
+        <div class="offset-10 col-1">
+            <a class="btn btn-danger float-right" href="{{ URL::previous() }}">Cancel</a>
+        </div>
 
-                <div class="col-1">
-                    <button type="submit" class="btn btn-primary float-right">Submit</button>
-                </div>
-            </div>
+        <div class="col-1">
+            <button type="submit" class="btn btn-primary float-right">Submit</button>
         </div>
     </div>
 </div>
