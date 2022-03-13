@@ -1,3 +1,26 @@
-.form-group{
+.form-group {
     margin-top: 50px;
+}
+
+.filter {
+    background-color: rgba(33, 37, 41, 0.2);
+    padding: 0;
+}
+
+.filter .button {
+    text-decoration: none;
+    border: 0;
+    background-color: #212529;
+    color: white;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.filter .button:hover {
+    cursor: pointer;
+    background-color: #34383b;
+}
+.filterBlock{
+    background-color: white;
 }

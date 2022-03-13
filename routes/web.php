@@ -42,3 +42,10 @@ Route::get('currently_rented', 'App\Http\Controllers\TransportController@create_
 */
 
 Route::post('search/transport', 'App\Http\Controllers\SearchController@searchTransporByModel');
+
+/*
+|--------------------------------------------------------------------------
+| Filters
+|--------------------------------------------------------------------------
+*/
+Route::get('transport/filter/{types}', 'App\Http\Controllers\FiltersController@transportFilter')->name('transport.filter');

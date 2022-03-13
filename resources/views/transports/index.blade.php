@@ -15,7 +15,7 @@
             <th>Model</th>
             <th>Number</th>
             <th>Mileage</th>
-            <th></th>
+            <th width="100"></th>
         </tr>
         </thead>
         <tbody>
@@ -53,7 +53,7 @@
         }
         buildTable(transportsStart);
 
-        $('.search_transport').bind("change keyup input click", function () {
+        /*$('.search_transport').bind("change keyup input click", function () {
             if ($(this).val().length > 0) {
                 $.ajax({
                     method: 'POST',
@@ -65,6 +65,6 @@
                     }
                 });
             }
-        });
+        });*/
     </script>
 @endsection
