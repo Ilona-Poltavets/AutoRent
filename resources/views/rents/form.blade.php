@@ -22,18 +22,40 @@
     </div>
 
     <div class="form-group row my-2">
+        <label for="id_owner" class="col-2 col-form-label">Owner</label>
+        <div class="col-10">
+            <select class="form-control" name="id_owner" disabled>
+                {{--
+                <option
+                    {{isset($rent)? '':'selected'}} disabled>Owner
+                </option>
+                --}}
+                @foreach($owners as $owner)
+                    <option
+                        {{isset($rent)? ($rent->id_owner==$owner->id ? 'selected':''):''}} value="{{$owner->id}}">{{$owner->name}}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row my-2">
         <label for="id_transport" class="col-2 col-form-label">Transport</label>
         <div class="col-10">
-            <select class="form-select" name="id_transport">
+            <select class="form-control" name="id_transport" disabled>
+                {{--
                 <option
                     {{isset($rent)? '':'selected'}} disabled>Transport
                 </option>
+                --}}
                 @foreach($transports as $transport)
                     <option
                         @if(isset($rent))
-                            {{$rent->id_transport==$transport->id ? 'selected':''}}
+                        {{$rent->id_transport==$transport->id ? 'selected disabled':''}}
+                        @elseif($transportId)
+                        {{$transportId==$transport->id?'selected disabled':''}}
                         @else
-                            {{''}}
+                        {{''}}
                         @endif
                         value="{{$transport->id}}">{{$transport->model}}
                     </option>
@@ -52,22 +74,6 @@
                 @foreach($tenants as $tenant)
                     <option
                         {{isset($rent)? ($rent->id_tenant==$tenant->id ? 'selected':''):''}} value="{{$tenant->id}}">{{$tenant->name}}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group row my-2">
-        <label for="id_owner" class="col-2 col-form-label">Owner</label>
-        <div class="col-10">
-            <select class="form-select" name="id_owner">
-                <option
-                    {{isset($rent)? '':'selected'}} disabled>Owner
-                </option>
-                @foreach($owners as $owner)
-                    <option
-                        {{isset($rent)? ($rent->id_owner==$owner->id ? 'selected':''):''}} value="{{$owner->id}}">{{$owner->name}}
                     </option>
                 @endforeach
             </select>

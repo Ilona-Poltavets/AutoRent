@@ -35,4 +35,5 @@
             <td>{{$transport->mileage}}</td>
         </tr>
     </table>
+    <a class="btn btn-success" href="{{route('rent.create',$transport->id)}}">Rent</a>
 @endsection

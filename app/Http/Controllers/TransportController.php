@@ -28,7 +28,7 @@ class TransportController extends Controller
     public function index()
     {
         $data['transports'] = Transport::paginate(20);
-        return view('transports.index', $data);
+        return view('transports.index',$data);//response()->view('transports.index')->json($data);
     }
 
     /**

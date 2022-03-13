@@ -15,9 +15,10 @@ class RentController extends Controller
         'date' => 'required',
         'id_transport' => 'required',
         'id_tenant' => 'required',
-        'rental_period' => 'required|min:5|max:100',
+        'rental_period' => 'required',
         'id_owner' => 'required'
     ];
+
     /**
      * Display a listing of the resource.
      *
@@ -34,18 +35,18 @@ class RentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($transportId)
     {
-        $owners = Owner::all();
+        $owners = DB::select(DB::raw('select owners.id, owners.name
+                                                from owners inner join transports on transports.owner_id=owners.id
+                                                where transports.id='.$transportId));
         $tenants = Tenant::all();
-        $transports = DB::select(DB::raw('select transports.id, transports.model, transports.owner_id
-                                                from transports inner join owners on transports.owner_id=owners.id
-                                                inner join rents on rents.id_transport=transports.id
-                                                where DATEADD(day,rents.rental_period,rents.date)<GETDATE()'));
+        $transports = DB::table('transports')->where('id','=',$transportId)->get();
         return view('rents.create', [
             'owners' => $owners,
             'tenants' => $tenants,
-            'transports' => $transports]);
+            'transports' => $transports,
+            'transportId'=>$transportId]);
     }
 
     /**
@@ -87,13 +88,15 @@ class RentController extends Controller
      */
     public function edit(Rent $rent)
     {
-        $owners = Owner::all();
+        $owners = DB::select(DB::raw('select owners.id, owners.name
+                                                from owners inner join transports on transports.owner_id=owners.id
+                                                where transports.id='.$rent->id_transport));
         $tenants = Tenant::all();
-        $transports = Transport::all();
-        return view('rents.create', compact('rent'), [
+        $transports = DB::table('transports')->where('id','=',$rent->id_transport)->get();
+        return view('rents.edit', compact('rent'), [
             'owners' => $owners,
             'tenants' => $tenants,
-            'transport' => $transports]);
+            'transports' => $transports]);
     }
 
     /**

@@ -44,5 +44,4 @@
         </tbody>
     </table>
     {!! $rents->links() !!}
-    <a href="{{route('rent.create')}}" class="btn btn-success">Add</a>
 @endsection
