@@ -13,6 +13,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+    <script src="{{asset('assets/js/app.js')}}"></script>
     <script src="{{asset('assets/js/filters.js')}}"></script>
     <script src="{{asset('assets/js/ajax.js')}}"></script>
 </head>
@@ -55,10 +56,10 @@
     <div class="row g-0">
             <nav class="col-2 filter no-gutter">
                 <ul class="nav list-group">
-                    @include('layouts.filters')
+                    @include('filters.transportsFilters')
                 </ul>
             </nav>
-        <main class="col">
+        <main class="col m-2">
             @yield('content')
         </main>
     </div>

@@ -29,7 +29,9 @@ class TransportController extends Controller
     {
         $data = Transport::paginate(20);
         $types = CarBodyType::all();
-        return view('transports.index', ['transports' => $data, 'carBodyTypes' => $types]);
+        $owners = Owner::all();
+        $countries = Country::all();
+        return view('transports.index', ['transports' => $data, 'carBodyTypes' => $types, 'owners' => $owners, 'countries' => $countries]);
     }
 
     /**

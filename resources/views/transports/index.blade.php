@@ -51,9 +51,9 @@
                 tbl.innerHTML += row
             }
         }
-        buildTable(transportsStart);
 
-        /*$('.search_transport').bind("change keyup input click", function () {
+        buildTable(transportsStart);
+        $('.search_transport').bind("change keyup input click", function () {
             if ($(this).val().length > 0) {
                 $.ajax({
                     method: 'POST',
@@ -65,6 +65,6 @@
                     }
                 });
             }
-        });*/
+        });
     </script>
 @endsection
