@@ -12,9 +12,9 @@
             </ul>
         </div>
     @endif
-    <form method="post" action="{{ route('transport.update',$transport->id) }}" >
-        @method('PATCH')
+    <form method="post" action="{{ route('transport.update',$transport->id) }}" enctype="multipart/form-data">
         @csrf
+        @method('PATCH')
         @include('transports.form')
     </form>
 @endsection

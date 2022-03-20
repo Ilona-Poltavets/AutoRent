@@ -48,4 +48,5 @@ Route::post('search/transport', 'App\Http\Controllers\SearchController@searchTra
 | Filters
 |--------------------------------------------------------------------------
 */
-Route::get('filter/transport', 'App\Http\Controllers\FiltersController@transportFilter')->name('transport.filter');
+Route::get('filter/transport', 'App\Http\Controllers\FiltersController@transportFilter');
+Route::get('filter/country', 'App\Http\Controllers\FiltersController@countryFilter');

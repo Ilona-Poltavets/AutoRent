@@ -8,6 +8,7 @@ use App\Models\Country;
 use App\Models\Owner;
 use App\Models\Transport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TransportController extends Controller
 {
@@ -27,7 +28,7 @@ class TransportController extends Controller
      */
     public function index()
     {
-        $data = Transport::paginate(20);
+        $data = Transport::paginate(10);
         $types = CarBodyType::all();
         $owners = Owner::all();
         $countries = Country::all();
@@ -66,7 +67,6 @@ class TransportController extends Controller
         $transport->owner_id = $request->owner_id;
         $transport->timestamps = false;
         $transport->save();
-        //return response()->json($transport);
         return redirect()->route('transport.index')->with('successMsg', 'Transport has been created successfully');
     }
 
@@ -108,6 +108,33 @@ class TransportController extends Controller
         $request->validate(self::VALIDATION_RULE);
 
         $transport = Transport::find($id);
+
+        /*foreach ($request->photos as $photo) {
+            $filename = $photo->store('photos');
+            ProductsPhoto::create([
+                'product_id' => $product->id,
+                'filename' => $filename
+            ]);
+        }*/
+        $paths="";
+        if ($request->file('photos') != null) {
+            //if ($transport->image != null) {
+            //    $oldpath = $transport->images;
+            //    Storage::delete($oldpath);
+            //}
+            $paths = $transport->images;
+            foreach ($request->photos as $index=>$photo) {
+                $filename = $photo->store("/images/cars/$id");
+                if($index==0)
+                    $paths = $filename;
+                else
+                    $paths = $paths .";". $filename;
+            }
+        } else {
+            $paths = $transport->images;
+        }
+
+        $transport->images = $paths;
         $transport->model = $request->model;
         $transport->number = $request->number;
         $transport->mileage = $request->mileage;
@@ -116,7 +143,6 @@ class TransportController extends Controller
         $transport->owner_id = $request->owner_id;
         $transport->timestamps = false;
         $transport->update();
-        //return response()->json($transport);
         return redirect('/transport')->with('success', 'Transport has been created successfully');
     }
 

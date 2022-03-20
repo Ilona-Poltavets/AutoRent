@@ -176,13 +176,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
-        /*
-         * Forms & HTML
-         */
-        //"Form" => Collective\Html\FormFacde::class,
-        //"Html" => Collective\Html\HtmlFacde::class,
-
     ],
 
     /*

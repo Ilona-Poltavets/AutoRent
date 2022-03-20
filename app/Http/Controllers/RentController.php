@@ -14,7 +14,7 @@ class RentController extends Controller
     const VALIDATION_RULE = [
         'date' => 'required',
         'id_transport' => 'required',
-        'id_tenant' => 'required',
+        'tenant' => 'required',
         'rental_period' => 'required',
         'id_owner' => 'required'
     ];
@@ -58,14 +58,19 @@ class RentController extends Controller
     public function store(Request $request)
     {
         $request->validate(self::VALIDATION_RULE);
+        $tenant=DB::select("select top 1 * from tenants where name='$request->tenant'");
+        $transport=Transport::find($request->id_transport);
         $rent = new Rent();
         $rent->date = $request->date;
         $rent->id_transport = $request->id_transport;
-        $rent->id_tenant = $request->id_tenant;
+        $rent->id_tenant = $tenant[0]->id;
         $rent->rental_period = $request->rental_period;
         $rent->id_owner = $request->id_owner;
         $rent->timestamps = false;
         $rent->save();
+        $transport->rental_times+=1;
+        $transport->timestamps = false;
+        $transport->save();
         return redirect()->route('rent.index')->with('successMsg', 'Rent has been created successfully');
     }
 

@@ -42,6 +42,7 @@ class CountryController extends Controller
         $request->validate(self::VALIDATION_RULE);
         $country=new Country();
         $country->name=$request->name;
+        $country->continent=$request->continent;
         $country->timestamps = false;
         $country->save();
         return redirect()->route('countries.index')->with('successMsg', 'Country has been created successfully');
@@ -56,6 +57,11 @@ class CountryController extends Controller
     public function show(Country $country)
     {
         return view('countries.show',compact('country'));
+        /*$data = DB::table('transports')->where('country_id', '=', $country->id)->paginate(20);
+        $types = CarBodyType::all();
+        $owners = Owner::all();
+        $countries = Country::all();
+        return view('transports.index', ['transports' => $data, 'carBodyTypes' => $types, 'owners' => $owners, 'countries' => $countries]);*/
     }
 
     /**
@@ -81,6 +87,7 @@ class CountryController extends Controller
         $request->validate(self::VALIDATION_RULE);
         $country=Country::find($id);
         $country->name=$request->name;
+        $country->continent=$request->continent;
         $country->timestamps = false;
         $country->save();
         return redirect()->route('country.index')->with('successMsg', 'Country has been edited successfully');

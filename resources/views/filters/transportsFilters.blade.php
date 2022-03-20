@@ -1,5 +1,5 @@
 <li class="nav-item">
-    <a id="typeBody" class="button" onclick="showCarBodyTypeFilter()">Car body type</a>
+    <a id="typeBody" class="button" onclick="showCarBodyTypeFilter()">Body style</a>
     <div id="typeBodyBlock" class="filterBlock" hidden>
         @if(!empty($carBodyTypes))
             @foreach($carBodyTypes as $type)
@@ -49,6 +49,18 @@
                 </div>
             @endforeach
         @endif
+    </div>
+</li>
+
+<li class="nav-item">
+    <a id="mileage" class="button">Mileage</a>
+    <div id="mileageBlock" class="filterBlock row">
+        <div class="col my-2 ms-2">
+            <input type="number" id="minMileage" name="minMileage" class="form-control" placeholder="min" min="0">
+        </div>
+        <div class="col my-2 me-2">
+            <input type="number" id="maxMileage" name="maxMileage" class="form-control" placeholder="max" min="0">
+        </div>
     </div>
 </li>
 

@@ -1,3 +1,43 @@
+@font-face {
+    font-family: "GaliverSans";
+    src: url('fonts/GaliverSans.eot');
+    src: local('☺'), url('fonts/GaliverSans.woff') format('woff'), url('fonts/GaliverSans.ttf') format('truetype'), url('fonts/GaliverSans.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "GaliverSans";
+    src: url('fonts/GaliverSansBold.eot');
+    src: local('☺'), url('fonts/GaliverSansBold.woff') format('woff'), url('fonts/GaliverSansBold.ttf') format('truetype'), url('fonts/GaliverSansBold.svg') format('svg');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: "GaliverSans";
+    src: url('fonts/GaliverSansItalic.eot');
+    src: local('☺'), url('fonts/GaliverSansItalic.woff') format('woff'), url('fonts/GaliverSansItalic.ttf') format('truetype'), url('fonts/GaliverSansItalic.svg') format('svg');
+    font-weight: normal;
+    font-style: Italic;
+}
+@font-face {
+    font-family: "GaliverSans";
+    src: url('fonts/GaliverSansBoldItalic.eot');
+    src: local('☺'), url('fonts/GaliverSansBoldItalic.woff') format('woff'), url('fonts/GaliverSansBoldItalic.ttf') format('truetype'), url('fonts/GaliverSansBoldItalic.svg') format('svg');
+    font-weight: 700;
+    font-style: Italic;
+}
+h1{
+    font-family: 'GaliverSans', serif;
+}
+thead{
+    font-family: 'GaliverSans', serif;
+}
+td{
+    font-size: 1.2em;
+}
+.miniPhoto{
+    height: 150px;
+}
 .form-group {
     margin-top: 50px;
 }
@@ -23,4 +63,7 @@
 }
 .filterBlock{
     background-color: white;
+}
+.photo{
+    width: 300px;
 }

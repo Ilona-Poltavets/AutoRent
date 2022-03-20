@@ -14,5 +14,9 @@
             <td>Name</td>
             <td>{{$country->name}}</td>
         </tr>
+        <tr>
+            <td>Continent</td>
+            <td>{{$country->continent}}</td>
+        </tr>
     </table>
 @endsection

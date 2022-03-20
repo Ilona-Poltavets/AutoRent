@@ -41,4 +41,13 @@ $(document).ready()
             countries.splice(countries.indexOf($(this).attr('id')), 1);
         }
     })
+
+    var continents = [];
+    $(document).on('click', '.continent_checkbox', function () {
+        if (continents.indexOf($(this).attr('id')) === -1) {
+            continents.push($(this).attr('id'));
+        } else {
+            continents.splice(continents.indexOf($(this).attr('id')), 1);
+        }
+    })
 }

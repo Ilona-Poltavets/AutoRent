@@ -3,15 +3,11 @@
     <div class="form-group row my-2">
         <label for="date" class="col-2 col-form-label">Start date</label>
         <div class="col-10">
-            <input id="date" name="date" class="date form-control" type="text" value="{{isset($rent)?$rent->data:''}}">
+            @php(date_default_timezone_set('Europe/Kiev'))
+            <input id="datetime" autocomplete="off" name="date" class="default" type="text"
+                   value="{{isset($rent)?$rent->data:($date = date('d.m.Y H:i', time()))}}">
         </div>
     </div>
-
-    <script type="text/javascript">
-        $('.date').datepicker({
-            format: 'mm-dd-yyyy'
-        });
-    </script>
 
     <div class="form-group row my-2">
         <label for="rental_period" class="col-2 col-form-label">Rental period</label>
@@ -24,7 +20,7 @@
     <div class="form-group row my-2">
         <label for="id_owner" class="col-2 col-form-label">Owner</label>
         <div class="col-10">
-            <select class="form-control" name="id_owner" disabled>
+            <select class="form-control" name="id_owner">
                 {{--
                 <option
                     {{isset($rent)? '':'selected'}} disabled>Owner
@@ -42,7 +38,7 @@
     <div class="form-group row my-2">
         <label for="id_transport" class="col-2 col-form-label">Transport</label>
         <div class="col-10">
-            <select class="form-control" name="id_transport" disabled>
+            <select class="form-control" name="id_transport">
                 {{--
                 <option
                     {{isset($rent)? '':'selected'}} disabled>Transport
@@ -51,9 +47,9 @@
                 @foreach($transports as $transport)
                     <option
                         @if(isset($rent))
-                        {{$rent->id_transport==$transport->id ? 'selected disabled':''}}
+                        {{$rent->id_transport==$transport->id ? 'selected':''}}
                         @elseif($transportId)
-                        {{$transportId==$transport->id?'selected disabled':''}}
+                        {{$transportId==$transport->id?'selected':''}}
                         @else
                         {{''}}
                         @endif
@@ -65,18 +61,16 @@
     </div>
 
     <div class="form-group row my-2">
-        <label for="id_tenant" class="col-2 col-form-label">Tenant</label>
-        <div class="col-10">
-            <select class="form-select" name="id_tenant">
-                <option
-                    {{isset($rent)? '':'selected'}} disabled>Tenant
-                </option>
-                @foreach($tenants as $tenant)
-                    <option
-                        {{isset($rent)? ($rent->id_tenant==$tenant->id ? 'selected':''):''}} value="{{$tenant->id}}">{{$tenant->name}}
-                    </option>
-                @endforeach
-            </select>
+        <label for="tenant" class="col-2 col-form-label">Tenant</label>
+        <div class="col-10 autocomplete">
+            <input name="tenant" list="tenants" class="form-control">
+            <datalist id="tenants">
+                <select>
+                    @foreach($tenants as $tenant)
+                        <option value="{{$tenant->name}}"></option>
+                    @endforeach
+                </select>
+            </datalist>
         </div>
     </div>
 
@@ -90,3 +84,4 @@
         </div>
     </div>
 </div>
+

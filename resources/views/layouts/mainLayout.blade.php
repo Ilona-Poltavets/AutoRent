@@ -5,19 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title')</title>
     <link rel="stylesheet" type="text/css" href="{{url('css/main.css')}}">
+
+    <!-- Font Awesome 6.1.0 Iconic Font -->
+    <link rel="stylesheet" href="{{url('css/fontawesome.min.css')}}" />
+
+    <!-- BOOTSTRAP 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+
+    <!-- JQUERY 3.6.0 LIBRARY -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DATETIME-PICKER -->
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{{url('assets/bootstrap5/css/bootstrap-datetimepicker.css')}}" />
+    <!-- JavaScript -->
+    <script src="{{asset('assets/bootstrap5/js/bootstrap-datetimepicker.js')}}"></script>
+    <!-- Languages -->
+    <script src="{{asset('assets/bootstrap5/js/locales/bootstrap-datetimepicker.ua.js')}}"></script>
+
+    <!-- FILTERS, AJAX, STYLE JS -->
     <script src="{{asset('assets/js/app.js')}}"></script>
     <script src="{{asset('assets/js/filters.js')}}"></script>
     <script src="{{asset('assets/js/ajax.js')}}"></script>
 </head>
-<body>
+<body class="main">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">AutoRent Service</a>
@@ -56,7 +71,7 @@
     <div class="row g-0">
             <nav class="col-2 filter no-gutter">
                 <ul class="nav list-group">
-                    @include('filters.transportsFilters')
+                    @yield('filters')
                 </ul>
             </nav>
         <main class="col m-2">

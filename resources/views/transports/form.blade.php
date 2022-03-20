@@ -1,6 +1,13 @@
 <div class="card p-2 mb-2 form-card-background">
 
     <div class="form-group row my-2">
+        <label for="photos[]" class="col-2 col-form-label">Photo</label>
+        <div class="col-10">
+            <input multiple="multiple" name="photos[]" class="form-control" type="file"/>
+        </div>
+    </div>
+
+    <div class="form-group row my-2">
         <label for="model" class="col-2 col-form-label">Model</label>
         <div class="col-10">
             <input id="model" name="model" class="form-control" type="text"
