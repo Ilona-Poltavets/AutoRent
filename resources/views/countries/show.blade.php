@@ -18,5 +18,9 @@
             <td>Continent</td>
             <td>{{$country->continent}}</td>
         </tr>
+        <tr>
+            <td>Flag</td>
+            <td><img src="{{asset($country->flag)}}" alt="{{$country->name}}" class="flag"></td>
+        </tr>
     </table>
 @endsection

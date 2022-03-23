@@ -2,10 +2,63 @@
 
     <div class="form-group row my-2">
         <label for="photos[]" class="col-2 col-form-label">Photo</label>
-        <div class="col-10">
+        <div id="photoCtrl" class="col-10">
+            @if(isset($transport))
+                @php($images=explode(';',$transport->images))
+                <div class="row">
+                    @foreach($images as $index=>$image)
+                        <div class="card" style="width: 18rem;">
+                            <img src="{{asset($image)}}" class="card-img-top">
+                            <div class="card-body">
+                                <a class="btn {{$index==0? "btn-warning":"btn-outline-warning"}}"
+                                   onclick="editPhoto(<?php echo $index;?>)"><i
+                                        class="fa fa-star"></i></a>
+                                <a class="btn btn-outline-danger" onclick="deletePhoto(<?php echo $index;?>)"><i
+                                        class="fa fa-trash"></i></a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
             <input multiple="multiple" name="photos[]" class="form-control" type="file"/>
         </div>
     </div>
+
+    @if(isset($transport))
+        <script>
+            function editPhoto(mainIndex) {
+                let id = <?php echo $transport->id?>;
+                $.ajax({
+                    method: "GET",
+                    url: "/editMainPhoto",
+                    data: {
+                        id,
+                        mainIndex
+                    },
+                    success: function () {
+                        console.log("success");
+                        document.location.reload();
+                    }
+                });
+            }
+
+            function deletePhoto(mainIndex) {
+                let id = <?php echo $transport->id?>;
+                $.ajax({
+                    method: "GET",
+                    url: "/deletePhoto",
+                    data: {
+                        id,
+                        mainIndex
+                    },
+                    success: function () {
+                        console.log("success");
+                        document.location.reload();
+                    }
+                });
+            }
+        </script>
+    @endif
 
     <div class="form-group row my-2">
         <label for="model" class="col-2 col-form-label">Model</label>

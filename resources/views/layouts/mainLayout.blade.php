@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{{url('css/main.css')}}">
 
     <!-- Font Awesome 6.1.0 Iconic Font -->
-    <link rel="stylesheet" href="{{url('css/fontawesome.min.css')}}" />
+    <link rel="stylesheet" href="{{url('css/fontawesome/css/fontawesome.css')}}" />
 
     <!-- BOOTSTRAP 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -26,6 +26,10 @@
     <script src="{{asset('assets/bootstrap5/js/bootstrap-datetimepicker.js')}}"></script>
     <!-- Languages -->
     <script src="{{asset('assets/bootstrap5/js/locales/bootstrap-datetimepicker.ua.js')}}"></script>
+
+    <!-- Fancypps -->
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"/>
 
     <!-- FILTERS, AJAX, STYLE JS -->
     <script src="{{asset('assets/js/app.js')}}"></script>

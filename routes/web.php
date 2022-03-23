@@ -42,6 +42,7 @@ Route::get('currently_rented', 'App\Http\Controllers\TransportController@create_
 */
 
 Route::post('search/transport', 'App\Http\Controllers\SearchController@searchTransporByModel');
+Route::post('search/country', 'App\Http\Controllers\SearchController@searchCountryByName');
 
 /*
 |--------------------------------------------------------------------------
@@ -50,3 +51,11 @@ Route::post('search/transport', 'App\Http\Controllers\SearchController@searchTra
 */
 Route::get('filter/transport', 'App\Http\Controllers\FiltersController@transportFilter');
 Route::get('filter/country', 'App\Http\Controllers\FiltersController@countryFilter');
+
+/*
+|--------------------------------------------------------------------------
+| Edit photo transport
+|--------------------------------------------------------------------------
+*/
+Route::get('editMainPhoto', 'App\Http\Controllers\TransportController@editMainPhoto');
+Route::get('deletePhoto', 'App\Http\Controllers\TransportController@deletePhoto');

@@ -10,9 +10,11 @@
             {{$success}}
         </div>
     @endif
+    <input class="search_country form-control" type="text">
     <table id="table" class="table table-hover">
-        <thead>
+        <thead class="table-dark">
         <tr>
+            <th width="250">Flag</th>
             <th>#</th>
             <th>Name</th>
             <th>Continent</th>
@@ -22,6 +24,7 @@
         <tbody>
         @foreach($countries as $country)
             <tr>
+                <td><img src="{{asset($country->flag)}}" alt="{{$country->name}}" class="flag"></td>
                 <td>{{$country->id}}</td>
                 <td>{{$country->name}}</td>
                 <td>{{$country->continent}}</td>
@@ -47,6 +50,7 @@
             const tbl = document.getElementById('table');
             for (var i = 0; i < countries.length; i++) {
                 var row = `<tr>
+                            <td><img src="${countries[i].flag}" alt="${countries[i].name}" class="flag"></td>
 							<td>${countries[i].id}</td>
 							<td>${countries[i].name}</td>
 							<td>${countries[i].continent}</td>
@@ -65,5 +69,17 @@
                 tbl.innerHTML += row
             }
         }
+
+        $('.search_country').bind("change keyup input click", function () {
+            $.ajax({
+                method: "POST",
+                url: "search/country",
+                data: {text_input: $(this).val(), _token: '{{csrf_token()}}'},
+                success: function (data) {
+                    $("#table tbody tr").remove();
+                    buildCountryTable(data);
+                }
+            })
+        })
     </script>
 @endsection

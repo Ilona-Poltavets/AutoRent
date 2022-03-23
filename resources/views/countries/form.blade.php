@@ -3,6 +3,13 @@
     <div class="form-group row my-2">
         <label for="name" class="col-2 col-form-label">Name</label>
         <div class="col-10">
+            <input name="flag" class="form-control" type="file"/>
+        </div>
+    </div>
+
+    <div class="form-group row my-2">
+        <label for="name" class="col-2 col-form-label">Name</label>
+        <div class="col-10">
             <input id="name" name="name" class="form-control" type="text"
                    value="{{isset($country)?$country->name:''}}"/>
         </div>

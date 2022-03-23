@@ -67,6 +67,19 @@ class TransportController extends Controller
         $transport->owner_id = $request->owner_id;
         $transport->timestamps = false;
         $transport->save();
+        $last = DB::table('transports')->latest('id')->first();
+        $paths = "";
+        if ($request->file('photos') != null) {
+            foreach ($request->photos as $index => $photo) {
+                $filename = $photo->store("/images/cars/$last->id");
+                if ($index == 0)
+                    $paths = $filename;
+                else
+                    $paths = $paths . ";" . $filename;
+            }
+        }
+        $transport->images = $paths;
+        $transport->save();
         return redirect()->route('transport.index')->with('successMsg', 'Transport has been created successfully');
     }
 
@@ -79,7 +92,6 @@ class TransportController extends Controller
     public function show(Transport $transport)
     {
         return view('transports.show', compact('transport'));
-        //return $this->edit($transport);
     }
 
     /**
@@ -106,32 +118,14 @@ class TransportController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate(self::VALIDATION_RULE);
-
         $transport = Transport::find($id);
 
-        /*foreach ($request->photos as $photo) {
-            $filename = $photo->store('photos');
-            ProductsPhoto::create([
-                'product_id' => $product->id,
-                'filename' => $filename
-            ]);
-        }*/
-        $paths="";
+        $paths = $transport->images;
         if ($request->file('photos') != null) {
-            //if ($transport->image != null) {
-            //    $oldpath = $transport->images;
-            //    Storage::delete($oldpath);
-            //}
-            $paths = $transport->images;
-            foreach ($request->photos as $index=>$photo) {
+            foreach ($request->photos as $index => $photo) {
                 $filename = $photo->store("/images/cars/$id");
-                if($index==0)
-                    $paths = $filename;
-                else
-                    $paths = $paths .";". $filename;
+                $paths = $paths . ";" . $filename;
             }
-        } else {
-            $paths = $transport->images;
         }
 
         $transport->images = $paths;
@@ -143,7 +137,7 @@ class TransportController extends Controller
         $transport->owner_id = $request->owner_id;
         $transport->timestamps = false;
         $transport->update();
-        return redirect('/transport')->with('success', 'Transport has been created successfully');
+        return view('transports.show', compact('transport'));
     }
 
     public function create_view()
@@ -169,5 +163,32 @@ class TransportController extends Controller
     {
         $transport->delete();
         return redirect()->route('transport.index')->with('successMsg', 'Transport has been deleted successfully');
+    }
+
+    public function editMainPhoto(Request $request)
+    {
+        $transport = Transport::find($request->id);
+        $images = explode(';', $transport->images);
+
+        $temp = $images[0];
+        $images[0] = $images[$request->mainIndex];
+        $images[$request->mainIndex] = $temp;
+
+        $transport->images = implode(';', $images);
+        $transport->timestamps = false;
+        $transport->save();
+    }
+
+    public function deletePhoto(Request $request)
+    {
+        $transport = Transport::find($request->id);
+        $images = explode(';', $transport->images);
+
+        Storage::delete($images[$request->mainIndex]);
+        unset($images[$request->mainIndex]);
+
+        $transport->images = implode(';', $images);
+        $transport->timestamps = false;
+        $transport->save();
     }
 }

@@ -1,10 +1,14 @@
-$(function(){
+$(function () {
     $(".default").datetimepicker({
-        format:'dd.mm.yyyy hh:ii',
-        todayHighlight:true,
+        format: 'dd.mm.yyyy hh:ii',
+        todayHighlight: true,
         startDate: '+0d',
-        todayBtn:true,
+        todayBtn: true,
         weekStart: 1,
-        language:'ua',
+        language: 'ua',
     });
+});
+
+Fancybox.bind('[data-fancybox="single"]', {
+    groupAttr: false,
 });
