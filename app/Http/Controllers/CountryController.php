@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Routing\Route;
 
 class CountryController extends Controller
 {
@@ -110,6 +112,7 @@ class CountryController extends Controller
      */
     public function destroy(Country $country)
     {
+        Storage::delete($country->flag);
         $country->delete();
         return redirect()->route('country.index')->with('successMsg', 'Country has been deleted successfully');
     }

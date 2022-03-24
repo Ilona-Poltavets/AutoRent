@@ -50,4 +50,5 @@ $(document).ready()
             continents.splice(continents.indexOf($(this).attr('id')), 1);
         }
     })
+
 }

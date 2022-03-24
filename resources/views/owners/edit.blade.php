@@ -12,7 +12,7 @@
             </ul>
         </div>
     @endif
-    <form method="post" action="{{ route('owner.update',$owner->id) }}" >
+    <form method="post" action="{{ route('owner.update',$owner->id) }}" enctype="multipart/form-data">
         @method('PATCH')
         @csrf
         @include('owners.form')

@@ -8,7 +8,7 @@
         </div>
     @endif
     <table class="table table-hover">
-        <thead>
+        <thead class="table-dark">
         <tr>
             <th>#</th>
             <th>Type</th>

@@ -19,8 +19,7 @@ $(document).ready()
             },
             success: function (result) {
                 $("#table tbody tr").remove();
-                console.log(result);
-                buildTable(result.data);
+                buildTableTransport(result.data);
             }
         });
     }
@@ -36,7 +35,6 @@ $(document).ready()
             },
             success: function (result) {
                 $("#table tbody tr").remove();
-                console.log(result);
                 buildCountryTable(result.data);
             }
         })

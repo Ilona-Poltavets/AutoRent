@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Owner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -44,5 +45,25 @@ class FiltersController extends Controller
             }
         })->paginate(20);
         return response()->json($countries);
+    }
+
+    public function ownerFilter(Request $request)
+    {
+        $owners = DB::table('owners')->where(function ($data) use ($request) {
+            if ($request->legal_entity != '') {
+                $data->whereRaw('legal_entity=' . $request->legal_entity);
+            }
+        })->paginate(20);
+        return response()->json($owners);
+    }
+
+    public function tenantFilter(Request $request)
+    {
+        $tenants = DB::table('tenants')->where(function ($data) use ($request) {
+            if ($request->legal_entity != '') {
+                $data->whereRaw('legal_entity=' . $request->legal_entity);
+            }
+        })->paginate(20);
+        return response()->json($tenants);
     }
 }

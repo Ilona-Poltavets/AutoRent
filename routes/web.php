@@ -43,6 +43,8 @@ Route::get('currently_rented', 'App\Http\Controllers\TransportController@create_
 
 Route::post('search/transport', 'App\Http\Controllers\SearchController@searchTransporByModel');
 Route::post('search/country', 'App\Http\Controllers\SearchController@searchCountryByName');
+Route::post('search/owner', 'App\Http\Controllers\SearchController@searchOwnerByName');
+Route::post('search/tenant', 'App\Http\Controllers\SearchController@searchTenantByName');
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +53,8 @@ Route::post('search/country', 'App\Http\Controllers\SearchController@searchCount
 */
 Route::get('filter/transport', 'App\Http\Controllers\FiltersController@transportFilter');
 Route::get('filter/country', 'App\Http\Controllers\FiltersController@countryFilter');
+Route::get('filter/owner', 'App\Http\Controllers\FiltersController@ownerFilter');
+Route::get('filter/tenant', 'App\Http\Controllers\FiltersController@tenantFilter');
 
 /*
 |--------------------------------------------------------------------------

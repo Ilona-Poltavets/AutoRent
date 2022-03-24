@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Owner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class OwnerController extends Controller
 {
@@ -39,8 +40,15 @@ class OwnerController extends Controller
         $request->validate([
             'name' => 'required'
         ]);
+        if ($request->file('logo') != null) {
+            $path = ($request->logo)->store("images/$request->name");
+        } else {
+            $path = null;
+        }
         $owner = new Owner();
         $owner->name = $request->name;
+        $owner->legal_entity = $request->legal_entity;
+        $owner->logo = $path;
         $owner->timestamps = false;
         $owner->save();
         return redirect()->route('owner.index')->with('successMsg', 'Country has been created successfully');
@@ -81,7 +89,17 @@ class OwnerController extends Controller
             'name' => 'required'
         ]);
         $owner = Owner::find($id);
+        if ($request->file('logo') != null) {
+            if ($owner->logo != null) {
+                Storage::delete($owner->logo);
+            }
+            $path = ($request->logo)->store("images/owners/$request->name");
+        } else {
+            $path = $owner->logo;
+        }
+        $owner->logo=$path;
         $owner->name = $request->name;
+        $owner->legal_entity = $request->legal_entity;
         $owner->timestamps = false;
         $owner->save();
         return redirect()->route('owner.index')->with('successMsg', 'Country has been edited successfully');
@@ -95,6 +113,7 @@ class OwnerController extends Controller
      */
     public function destroy(Owner $owner)
     {
+        Storage::delete($owner->logo);
         $owner->delete();
         return redirect()->route('owner.index')->with('successMsg', 'Country has been deleted successfully');
     }

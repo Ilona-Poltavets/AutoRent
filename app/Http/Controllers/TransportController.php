@@ -161,6 +161,7 @@ class TransportController extends Controller
      */
     public function destroy(Transport $transport)
     {
+        Storage::deleteDirectory("images/$transport->id");
         $transport->delete();
         return redirect()->route('transport.index')->with('successMsg', 'Transport has been deleted successfully');
     }
