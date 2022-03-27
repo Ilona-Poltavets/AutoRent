@@ -26,7 +26,6 @@ $(document).ready()
 
     function filterCountry(continents) {
         continents = JSON.stringify(continents);
-        console.log(continents);
         $.ajax({
             method: 'GET',
             url: "filter/country",
@@ -36,6 +35,30 @@ $(document).ready()
             success: function (result) {
                 $("#table tbody tr").remove();
                 buildCountryTable(result.data);
+            }
+        })
+    }
+
+    function filterRent(owners){
+        owners=JSON.stringify(owners);
+        console.log(owners);
+        let minDate=document.getElementById('dateStart').value;
+        let maxDate=document.getElementById('dateEnd').value;
+        let minPeriod=document.getElementById('rentalPeriodMin').value;
+        let maxPeriod=document.getElementById('rentalPeriodMax').value;
+        $.ajax({
+            method:"GET",
+            url:"filter/rent",
+            data:{
+                owners,
+                minDate,
+                maxDate,
+                minPeriod,
+                maxPeriod
+            },
+            success:function (result){
+                $("#table tbody tr").remove();
+                buildRentsTable(result.data);
             }
         })
     }

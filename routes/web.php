@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Route::resource('transport', 'App\Http\Controllers\TransportController');
@@ -45,6 +45,7 @@ Route::post('search/transport', 'App\Http\Controllers\SearchController@searchTra
 Route::post('search/country', 'App\Http\Controllers\SearchController@searchCountryByName');
 Route::post('search/owner', 'App\Http\Controllers\SearchController@searchOwnerByName');
 Route::post('search/tenant', 'App\Http\Controllers\SearchController@searchTenantByName');
+Route::post('search/rent', 'App\Http\Controllers\SearchController@searchRent');
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +56,7 @@ Route::get('filter/transport', 'App\Http\Controllers\FiltersController@transport
 Route::get('filter/country', 'App\Http\Controllers\FiltersController@countryFilter');
 Route::get('filter/owner', 'App\Http\Controllers\FiltersController@ownerFilter');
 Route::get('filter/tenant', 'App\Http\Controllers\FiltersController@tenantFilter');
+Route::get('filter/rent', 'App\Http\Controllers\FiltersController@rentFilter');
 
 /*
 |--------------------------------------------------------------------------

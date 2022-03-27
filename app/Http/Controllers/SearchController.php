@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use App\Models\Owner;
+use App\Models\Rent;
 use App\Models\Tenant;
 use App\Models\Transport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SearchController extends Controller
 {
@@ -48,5 +50,25 @@ class SearchController extends Controller
         else
             $tenants = Tenant::all();
         return response()->json($tenants);
+    }
+
+    public function searchRent(Request $request)
+    {
+        $text_input = $request->input('text_input');
+        if ($text_input != '') {
+            $rents = DB::table('rents')
+                ->where('id_transport', '=', Transport::where('model', 'like', "%{$text_input}%")->value('id'))
+                ->orWhere('id_tenant', '=', Tenant::where('name', 'like', "%{$text_input}%")->value('id'))
+                ->orWhere('id_owner', '=', Owner::where('name', 'like', "%{$text_input}%")->value('id'))
+                ->get();
+        } else {
+            $rents = Rent::all();
+        }
+        foreach ($rents as $rent) {
+            $rent->model = Transport::where('id', 'like', $rent->id_transport)->value('model');
+            $rent->tenant = Tenant::where('id', 'like', $rent->id_tenant)->value('name');
+            $rent->owner = Owner::where('id', 'like', $rent->id_owner)->value('name');
+        }
+        return response()->json($rents);
     }
 }

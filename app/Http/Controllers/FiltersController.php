@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Owner;
+use App\Models\Tenant;
+use App\Models\Transport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -65,5 +67,33 @@ class FiltersController extends Controller
             }
         })->paginate(20);
         return response()->json($tenants);
+    }
+
+    public function rentFilter(Request $request)
+    {
+        $owners = str_replace('"', "'", trim($request->owners, '[]'));
+        $rents = DB::table('rents')->where(function ($data) use ($owners, $request) {
+            if ($owners != '') {
+                $data->whereRaw('id_owner IN (' . $owners . ')');
+            }
+            if ($request->minDate != '') {
+                $data->whereRaw('date<' . $request->minDate);
+            }
+            if ($request->maxDate != '') {
+                $data->whereRaw('date<' . $request->maxDate);
+            }
+            if ($request->minPeriod != '') {
+                $data->whereRaw('rental_period>' . $request->minPeriod);
+            }
+            if ($request->maxPeriod != '') {
+                $data->whereRaw('rental_period<' . $request->maxPeriod);
+            }
+        })->paginate(20);
+        foreach ($rents as $rent) {
+            $rent->model = Transport::where('id', 'like', $rent->id_transport)->value('model');
+            $rent->tenant = Tenant::where('id', 'like', $rent->id_tenant)->value('name');
+            $rent->owner = Owner::where('id', 'like', $rent->id_owner)->value('name');
+        }
+        return response()->json($rents);
     }
 }

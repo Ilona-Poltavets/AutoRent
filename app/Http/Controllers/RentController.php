@@ -26,8 +26,9 @@ class RentController extends Controller
      */
     public function index()
     {
-        $data['rents'] = Rent::paginate(20);
-        return view('rents.index', $data);
+        $owners = Owner::all();
+        $rents = Rent::paginate(20);
+        return view('rents.index', ['owners' => $owners, 'rents' => $rents]);
     }
 
     /**
@@ -39,14 +40,14 @@ class RentController extends Controller
     {
         $owners = DB::select(DB::raw('select owners.id, owners.name
                                                 from owners inner join transports on transports.owner_id=owners.id
-                                                where transports.id='.$transportId));
+                                                where transports.id=' . $transportId));
         $tenants = Tenant::all();
-        $transports = DB::table('transports')->where('id','=',$transportId)->get();
+        $transports = DB::table('transports')->where('id', '=', $transportId)->get();
         return view('rents.create', [
             'owners' => $owners,
             'tenants' => $tenants,
             'transports' => $transports,
-            'transportId'=>$transportId]);
+            'transportId' => $transportId]);
     }
 
     /**
@@ -58,8 +59,8 @@ class RentController extends Controller
     public function store(Request $request)
     {
         $request->validate(self::VALIDATION_RULE);
-        $tenant=DB::select("select top 1 * from tenants where name='$request->tenant'");
-        $transport=Transport::find($request->id_transport);
+        $tenant = DB::select("select top 1 * from tenants where name='$request->tenant'");
+        $transport = Transport::find($request->id_transport);
         $rent = new Rent();
         $rent->date = $request->date;
         $rent->id_transport = $request->id_transport;
@@ -68,7 +69,7 @@ class RentController extends Controller
         $rent->id_owner = $request->id_owner;
         $rent->timestamps = false;
         $rent->save();
-        $transport->rental_times+=1;
+        $transport->rental_times += 1;
         $transport->timestamps = false;
         $transport->save();
         return redirect()->route('rent.index')->with('successMsg', 'Rent has been created successfully');
@@ -95,9 +96,9 @@ class RentController extends Controller
     {
         $owners = DB::select(DB::raw('select owners.id, owners.name
                                                 from owners inner join transports on transports.owner_id=owners.id
-                                                where transports.id='.$rent->id_transport));
+                                                where transports.id=' . $rent->id_transport));
         $tenants = Tenant::all();
-        $transports = DB::table('transports')->where('id','=',$rent->id_transport)->get();
+        $transports = DB::table('transports')->where('id', '=', $rent->id_transport)->get();
         return view('rents.edit', compact('rent'), [
             'owners' => $owners,
             'tenants' => $tenants,
@@ -135,5 +136,9 @@ class RentController extends Controller
     {
         $rent->delete();
         return redirect()->route('rent.index')->with('successMsg', 'Rent has been deleted successfully');
+    }
+
+    public function getModel($id){
+        return \App\Models\Transport::find($id)->model;
     }
 }

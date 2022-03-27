@@ -1,5 +1,8 @@
 @extends('layouts.mainLayout')
 @section('title','Rents')
+@section('filters')
+    @include('filters.rentsFilters')
+@endsection
 @section('content')
     <h1 class="text-center">Rents</h1>
     @if (!empty($success))
@@ -7,7 +10,8 @@
             {{$success}}
         </div>
     @endif
-    <table class="table table-hover">
+    <input type="text" class="form-control search_rent">
+    <table id="table" class="table table-hover">
         <thead>
         <tr>
             <th>#</th>
@@ -19,7 +23,7 @@
             <th></th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="body">
         @foreach($rents as $rent)
             <tr>
                 <td>{{$rent->id}}</td>
@@ -44,4 +48,45 @@
         </tbody>
     </table>
     {!! $rents->links() !!}
+    <script>
+        function buildRentsTable(rents) {
+            const tbl = document.getElementById('body');
+            for (var i = 0; i < rents.length; i++) {
+                var row=`
+                    <tr>
+                <td>${rents[i].id}</td>
+                <td>${rents[i].date}</td>
+                <td>${rents[i].model}</td>
+                <td>${rents[i].tenant}</td>
+                <td>${rents[i].rental_period}</td>
+                <td>${rents[i].owner}</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="rent/${rents[i].id}" class="btn btn-info">Show</a>
+                        <a href="rent/${rents[i].id}/edit" class="btn btn-primary">Edit</a>
+                        <form action="rent/${rents[i].id}" method="post">
+                            @method('delete')
+                @csrf
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </td>
+</tr>
+`
+                tbl.innerHTML+=row;
+            }
+        }
+
+        $('.search_rent').bind("change keyup input click", function () {
+            $.ajax({
+                method: 'POST',
+                url: "search/rent",
+                data: {text_input: $(this).val(), _token: '{{csrf_token()}}'},
+                success: function (data) {
+                    $("#table tbody tr").remove();
+                    buildRentsTable(data);
+                }
+            });
+        });
+    </script>
 @endsection
