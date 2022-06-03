@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{{url('css/main.css')}}">
 
     <!-- Font Awesome 6.1.0 Iconic Font -->
-    <link rel="stylesheet" href="{{url('css/fontawesome/css/fontawesome.css')}}" />
+    <link rel="stylesheet" href="{{url('css/fontawesome/css/fontawesome.css')}}"/>
 
     <!-- BOOTSTRAP 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -21,7 +21,7 @@
 
     <!-- DATETIME-PICKER -->
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="{{url('assets/bootstrap5/css/bootstrap-datetimepicker.css')}}" />
+    <link rel="stylesheet" href="{{url('assets/bootstrap5/css/bootstrap-datetimepicker.css')}}"/>
     <!-- JavaScript -->
     <script src="{{asset('assets/bootstrap5/js/bootstrap-datetimepicker.js')}}"></script>
     <!-- Languages -->
@@ -69,15 +69,58 @@
                 </li>
             </ul>
         </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Left Side Of Navbar -->
+            <ul class="navbar-nav me-auto">
+
+            </ul>
+
+            <!-- Right Side Of Navbar -->
+            <ul class="navbar-nav ms-auto">
+                <!-- Authentication Links -->
+                @guest
+                    @if (Route::has('login'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        </li>
+                    @endif
+
+                    @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                        </li>
+                    @endif
+                @else
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                           data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            {{ Auth::user()->name }}
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                @endguest
+            </ul>
+        </div>
     </div>
 </nav>
 <div class="" id="app">
     <div class="row g-0">
-            <nav class="col-2 filter no-gutter">
-                <ul class="nav list-group">
-                    @yield('filters')
-                </ul>
-            </nav>
+        <nav class="col-2 filter no-gutter">
+            <ul class="nav list-group">
+                @yield('filters')
+            </ul>
+        </nav>
         <main class="col m-2">
             @yield('content')
         </main>

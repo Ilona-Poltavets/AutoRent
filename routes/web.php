@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\RentController;
+use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Auth::routes(['verify' => true]);
 
 Route::get('/', function () {
     return view('home');
@@ -65,3 +69,14 @@ Route::get('filter/rent', 'App\Http\Controllers\FiltersController@rentFilter');
 */
 Route::get('editMainPhoto', 'App\Http\Controllers\TransportController@editMainPhoto');
 Route::get('deletePhoto', 'App\Http\Controllers\TransportController@deletePhoto');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+Route::get('/get_role',function (){
+    $permissionsArr=explode(';',Auth::user()->role->permissions);
+    var_dump($permissionsArr);
+    var_dump(in_array('edit_transport',$permissionsArr));
+});

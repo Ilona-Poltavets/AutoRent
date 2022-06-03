@@ -41,6 +41,7 @@
                 <td>
                     <div class="btn-group">
                         <a href="{{route('transport.show',$transport->id)}}" class="btn btn-info">Show</a>
+                        @php(Auth::user())
                         <a href="{{route('transport.edit',$transport->id)}}" class="btn btn-primary">Edit</a>
                         <form action="{{route('transport.destroy',$transport->id)}}" method="post">
                             @method('delete')

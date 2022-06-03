@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\CarBodyType;
 use App\Models\Country;
@@ -42,10 +43,14 @@ class TransportController extends Controller
      */
     public function create()
     {
-        $countries = Country::all();
-        $owners = Owner::all();
-        $carBodyTypes = CarBodyType::all();
-        return view('transports.create', ['countries' => $countries, 'owners' => $owners, 'carBodyTypes' => $carBodyTypes]);
+        if (Auth::user() && Auth::user()->can('create', Transport::class)) {
+            $countries = Country::all();
+            $owners = Owner::all();
+            $carBodyTypes = CarBodyType::all();
+            return view('transports.create', ['countries' => $countries, 'owners' => $owners, 'carBodyTypes' => $carBodyTypes]);
+        } else {
+            return redirect('transport');
+        }
     }
 
     /**
@@ -56,31 +61,35 @@ class TransportController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(self::VALIDATION_RULE);
+        if (Auth::user() && Auth::user()->can('create', Transport::class)) {
+            $request->validate(self::VALIDATION_RULE);
 
-        $transport = new Transport();
-        $transport->model = $request->model;
-        $transport->number = $request->number;
-        $transport->mileage = $request->mileage;
-        $transport->country_id = $request->country_id;
-        $transport->body_type_id = $request->body_type_id;
-        $transport->owner_id = $request->owner_id;
-        $transport->timestamps = false;
-        $transport->save();
-        $last = DB::table('transports')->latest('id')->first();
-        $paths = "";
-        if ($request->file('photos') != null) {
-            foreach ($request->photos as $index => $photo) {
-                $filename = $photo->store("/images/cars/$last->id");
-                if ($index == 0)
-                    $paths = $filename;
-                else
-                    $paths = $paths . ";" . $filename;
+            $transport = new Transport();
+            $transport->model = $request->model;
+            $transport->number = $request->number;
+            $transport->mileage = $request->mileage;
+            $transport->country_id = $request->country_id;
+            $transport->body_type_id = $request->body_type_id;
+            $transport->owner_id = $request->owner_id;
+            $transport->timestamps = false;
+            $transport->save();
+            $last = DB::table('transports')->latest('id')->first();
+            $paths = "";
+            if ($request->file('photos') != null) {
+                foreach ($request->photos as $index => $photo) {
+                    $filename = $photo->store("/images/cars/$last->id");
+                    if ($index == 0)
+                        $paths = $filename;
+                    else
+                        $paths = $paths . ";" . $filename;
+                }
             }
+            $transport->images = $paths;
+            $transport->save();
+            return redirect()->route('transport.index')->with('successMsg', 'Transport has been created successfully');
+        } else {
+            return redirect('transport');
         }
-        $transport->images = $paths;
-        $transport->save();
-        return redirect()->route('transport.index')->with('successMsg', 'Transport has been created successfully');
     }
 
     /**
@@ -102,10 +111,14 @@ class TransportController extends Controller
      */
     public function edit(Transport $transport)
     {
-        $countries = Country::all();
-        $owners = Owner::all();
-        $carBodyTypes = CarBodyType::all();
-        return view('transports.edit', compact('transport'), ['countries' => $countries, 'owners' => $owners, 'carBodyTypes' => $carBodyTypes]);
+        if (Auth::user() && Auth::user()->can('edit', Transport::class)) {
+            $countries = Country::all();
+            $owners = Owner::all();
+            $carBodyTypes = CarBodyType::all();
+            return view('transports.edit', compact('transport'), ['countries' => $countries, 'owners' => $owners, 'carBodyTypes' => $carBodyTypes]);
+        } else {
+            return redirect('transport');
+        }
     }
 
     /**
@@ -117,27 +130,31 @@ class TransportController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate(self::VALIDATION_RULE);
-        $transport = Transport::find($id);
+        if (Auth::user() && Auth::user()->can('edit', Transport::class)) {
+            $request->validate(self::VALIDATION_RULE);
+            $transport = Transport::find($id);
 
-        $paths = $transport->images;
-        if ($request->file('photos') != null) {
-            foreach ($request->photos as $index => $photo) {
-                $filename = $photo->store("/images/cars/$id");
-                $paths = $paths . ";" . $filename;
+            $paths = $transport->images;
+            if ($request->file('photos') != null) {
+                foreach ($request->photos as $index => $photo) {
+                    $filename = $photo->store("/images/cars/$id");
+                    $paths = $paths . ";" . $filename;
+                }
             }
-        }
 
-        $transport->images = $paths;
-        $transport->model = $request->model;
-        $transport->number = $request->number;
-        $transport->mileage = $request->mileage;
-        $transport->country_id = $request->country_id;
-        $transport->body_type_id = $request->body_type_id;
-        $transport->owner_id = $request->owner_id;
-        $transport->timestamps = false;
-        $transport->update();
-        return view('transports.show', compact('transport'));
+            $transport->images = $paths;
+            $transport->model = $request->model;
+            $transport->number = $request->number;
+            $transport->mileage = $request->mileage;
+            $transport->country_id = $request->country_id;
+            $transport->body_type_id = $request->body_type_id;
+            $transport->owner_id = $request->owner_id;
+            $transport->timestamps = false;
+            $transport->update();
+            return view('transports.show', compact('transport'));
+        } else {
+            return redirect('transport');
+        }
     }
 
     public function create_view()
@@ -161,9 +178,13 @@ class TransportController extends Controller
      */
     public function destroy(Transport $transport)
     {
-        Storage::deleteDirectory("images/$transport->id");
-        $transport->delete();
-        return redirect()->route('transport.index')->with('successMsg', 'Transport has been deleted successfully');
+        if (Auth::user() && Auth::user()->can('delete', Transport::class)) {
+            Storage::deleteDirectory("images/$transport->id");
+            $transport->delete();
+            return redirect()->route('transport.index')->with('successMsg', 'Transport has been deleted successfully');
+        } else {
+            return redirect('transport');
+        }
     }
 
     public function editMainPhoto(Request $request)
