@@ -64,12 +64,17 @@ class CountryController extends Controller
      */
     public function show(Country $country)
     {
-        return view('countries.show', compact('country'));
-        /*$data = DB::table('transports')->where('country_id', '=', $country->id)->paginate(20);
-        $types = CarBodyType::all();
-        $owners = Owner::all();
-        $countries = Country::all();
-        return view('transports.index', ['transports' => $data, 'carBodyTypes' => $types, 'owners' => $owners, 'countries' => $countries]);*/
+        $transports=$country->transports;
+        $top5 = [];
+        if (count($transports) < 6) {
+            $top5=$transports;
+        } else {
+            $numbers=array_rand(range(0,count($transports)-1),5);
+            foreach ($numbers as $num){
+                array_push($top5,$transports[$num]);
+            }
+        }
+        return view('countries.show', compact('country'),compact('top5'));
     }
 
     /**

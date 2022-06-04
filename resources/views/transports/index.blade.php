@@ -20,7 +20,7 @@
             <th>Model</th>
             <th>Number</th>
             <th>Mileage</th>
-            <th>rental_times</th>
+            <th>Mumber of leases</th>
             <th width="100"></th>
         </tr>
         </thead>
@@ -37,7 +37,7 @@
                 <td>{{$transport->model}}</td>
                 <td>{{$transport->number}}</td>
                 <td>{{$transport->mileage}}</td>
-                <td>{{$transport->rental_times}}</td>
+                <td>{{$transport->amount_in_rent}}</td>
                 <td>
                     <div class="btn-group">
                         <a href="{{route('transport.show',$transport->id)}}" class="btn btn-info">Show</a>
@@ -87,7 +87,7 @@
                 <td>${transports[i].model}</td>
                 <td>${transports[i].number}</td>
                 <td>${transports[i].mileage}</td>
-                <td>${transports[i].rental_times}</td>
+                <td>${transports[i].amount_in_rent}</td>
                 <td>
                                 <div class="btn-group">
                                     <a href="transport/${transports[i].id}" class="btn btn-info">Show</a>

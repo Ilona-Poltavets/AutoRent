@@ -20,6 +20,7 @@
             <th>#</th>
             <th width="350">logo</th>
             <th>name</th>
+            <th>Average of mileage</th>
             <th></th>
         </tr>
         </thead>
@@ -41,6 +42,7 @@
                     </script>
                 @endif
                 <td align="center">{{$owner->name}}</td>
+                <td>{{$owner->avgMileage}}</td>
                 <td>
                     <div class="btn-group">
                         <a href="{{route('owner.show',$owner->id)}}" class="btn btn-info">Show</a>

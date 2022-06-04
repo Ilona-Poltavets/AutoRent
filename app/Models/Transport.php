@@ -7,13 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transport extends Model
 {
-    /*protected $fillable = [
-        'model',
-       'number',
-        'mileage',
-        'owner_id',
-        'body_type_id',
-        'country_id',
-    ];*/
     use HasFactory;
+
+    public function country(){
+        return $this->hasOne(Country::class, 'country_id','id');
+    }
+    public function carBodyType(){
+        return $this->belongsTo(CarBodyType::class, 'id','body_type_id');
+    }
+    public function owner(){
+        return $this->belongsTo(Owner::class, 'id','owner_id');
+    }
+    public function rents(){
+        return $this->hasMany(Rent::class,'id_transport');
+    }
 }

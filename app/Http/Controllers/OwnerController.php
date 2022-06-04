@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Owner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class OwnerController extends Controller
@@ -16,6 +17,9 @@ class OwnerController extends Controller
     public function index()
     {
         $data['owners'] = Owner::paginate(20);
+        foreach ($data['owners'] as $elem){
+            $elem->avgMileage=DB::select("select dbo.getAverageMileage(?) as nb",[$elem->id])[0]->nb;
+        }
         return view('owners.index', $data);
     }
 
@@ -62,7 +66,17 @@ class OwnerController extends Controller
      */
     public function show(Owner $owner)
     {
-        return view('owners.show', compact('owner'));
+        $transports=$owner->transports;
+        $top5 = [];
+        if (count($transports) < 6) {
+            $top5=$transports;
+        } else {
+            $numbers=array_rand(range(0,count($transports)-1),5);
+            foreach ($numbers as $num){
+                array_push($top5,$transports[$num]);
+            }
+        }
+        return view('owners.show', compact('owner'),compact('top5'));
     }
 
     /**

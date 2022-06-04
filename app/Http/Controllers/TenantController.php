@@ -56,7 +56,8 @@ class TenantController extends Controller
      */
     public function show(Tenant $tenant)
     {
-        return view('tenants.show',compact('tenant'));
+        $rents=$tenant->rents;
+        return view('tenants.show',compact('tenant'),compact('rents'));
     }
 
     /**

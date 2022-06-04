@@ -56,22 +56,14 @@ class CarBodyTypeController extends Controller
      */
     public function show(CarBodyType $carBodyType)
     {
-        $transports = DB::select("select * from transports where body_type_id=$carBodyType->id");
+        $transports=$carBodyType->transports;
         $top5 = [];
-        $numbers = [];
         if (count($transports) < 6) {
             $top5=$transports;
         } else {
-            while (count($top5) <= 5) {
-                $index = rand(1, count($transports));
-                if (!in_array($index, $numbers)) {
-                    foreach ($transports as $i => $transport) {
-                        if ($i == $index) {
-                            array_push($top5, $transport);
-                        }
-                    }
-                    array_push($numbers, $index);
-                }
+            $numbers=array_rand(range(0,count($transports)-1),5);
+            foreach ($numbers as $num){
+                array_push($top5,$transports[$num]);
             }
         }
         return view('car_body_types.show', compact('carBodyType'), compact('top5'));

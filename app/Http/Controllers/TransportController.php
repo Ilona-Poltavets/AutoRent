@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\PDO\Connection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\CarBodyType;
@@ -64,15 +65,6 @@ class TransportController extends Controller
         if (Auth::user() && Auth::user()->can('create', Transport::class)) {
             $request->validate(self::VALIDATION_RULE);
 
-            $transport = new Transport();
-            $transport->model = $request->model;
-            $transport->number = $request->number;
-            $transport->mileage = $request->mileage;
-            $transport->country_id = $request->country_id;
-            $transport->body_type_id = $request->body_type_id;
-            $transport->owner_id = $request->owner_id;
-            $transport->timestamps = false;
-            $transport->save();
             $last = DB::table('transports')->latest('id')->first();
             $paths = "";
             if ($request->file('photos') != null) {
@@ -84,8 +76,12 @@ class TransportController extends Controller
                         $paths = $paths . ";" . $filename;
                 }
             }
-            $transport->images = $paths;
-            $transport->save();
+            else{
+                $paths='css/not_found_image.jpg';
+            }
+
+            DB::select("execute dbo.addTrasnportProc '" . $request->number . "', '" . $request->model . "', " . $request->mileage . ', ' . $request->owner_id . ', ' . $request->body_type_id . ', ' . $request->country_id . ", '" . $paths . "' ");
+
             return redirect()->route('transport.index')->with('successMsg', 'Transport has been created successfully');
         } else {
             return redirect('transport');
