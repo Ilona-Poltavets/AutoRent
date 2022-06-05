@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Owner;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,11 +18,15 @@ class OwnerController extends Controller
      */
     public function index()
     {
-        $data['owners'] = Owner::paginate(20);
-        foreach ($data['owners'] as $elem){
-            $elem->avgMileage=DB::select("select dbo.getAverageMileage(?) as nb",[$elem->id])[0]->nb;
+        if (Auth::user()) {
+            $data['owners'] = Owner::paginate(20);
+            foreach ($data['owners'] as $elem) {
+                $elem->avgMileage = DB::select("select dbo.getAverageMileage(?) as nb", [$elem->id])[0]->nb;
+            }
+            return view('owners.index', $data);
+        } else {
+            return redirect()->route(RouteServiceProvider::HOME);
         }
-        return view('owners.index', $data);
     }
 
     /**
@@ -30,7 +36,11 @@ class OwnerController extends Controller
      */
     public function create()
     {
-        return view('owners.create');
+        if (Auth::user() && Auth::user()->can('create', Owner::class)) {
+            return view('owners.create');
+        } else {
+            return redirect()->route('owner.index')->with('successMsg', 'Tenant has been edited successfully');
+        }
     }
 
     /**
@@ -41,21 +51,25 @@ class OwnerController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required'
-        ]);
-        if ($request->file('logo') != null) {
-            $path = ($request->logo)->store("images/$request->name");
+        if (Auth::user() && Auth::user()->can('create', Owner::class)) {
+            $request->validate([
+                'name' => 'required'
+            ]);
+            if ($request->file('logo') != null) {
+                $path = ($request->logo)->store("images/$request->name");
+            } else {
+                $path = null;
+            }
+            $owner = new Owner();
+            $owner->name = $request->name;
+            $owner->legal_entity = $request->legal_entity;
+            $owner->logo = $path;
+            $owner->timestamps = false;
+            $owner->save();
+            return redirect()->route('owner.index')->with('successMsg', 'Country has been created successfully');
         } else {
-            $path = null;
+            return redirect()->route('owner.index')->with('successMsg', 'Tenant has been edited successfully');
         }
-        $owner = new Owner();
-        $owner->name = $request->name;
-        $owner->legal_entity = $request->legal_entity;
-        $owner->logo = $path;
-        $owner->timestamps = false;
-        $owner->save();
-        return redirect()->route('owner.index')->with('successMsg', 'Country has been created successfully');
     }
 
     /**
@@ -66,18 +80,22 @@ class OwnerController extends Controller
      */
     public function show(Owner $owner)
     {
-        $transports=DB::select("select * from dbo.getTransports('$owner->name')");
-        //dd($transports);
-        $top5 = [];
-        if (count($transports) < 6) {
-            $top5=$transports;
-        } else {
-            $numbers=array_rand(range(0,count($transports)-1),5);
-            foreach ($numbers as $num){
-                array_push($top5,$transports[$num]);
+        if (Auth::user()) {
+            $transports = DB::select("select * from dbo.getTransports('$owner->name')");
+            //dd($transports);
+            $top5 = [];
+            if (count($transports) < 6) {
+                $top5 = $transports;
+            } else {
+                $numbers = array_rand(range(0, count($transports) - 1), 5);
+                foreach ($numbers as $num) {
+                    array_push($top5, $transports[$num]);
+                }
             }
+            return view('owners.show', compact('owner'), compact('top5'));
+        } else {
+            return redirect()->route('owner.index')->with('successMsg', 'Tenant has been edited successfully');
         }
-        return view('owners.show', compact('owner'),compact('top5'));
     }
 
     /**
@@ -88,7 +106,11 @@ class OwnerController extends Controller
      */
     public function edit(Owner $owner)
     {
-        return view('owners.edit', compact('owner'));
+        if (Auth::user() && Auth::user()->can('edit', Owner::class)) {
+            return view('owners.edit', compact('owner'));
+        } else {
+            return redirect()->route('owner.index')->with('successMsg', 'Tenant has been edited successfully');
+        }
     }
 
     /**
@@ -100,24 +122,28 @@ class OwnerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required'
-        ]);
-        $owner = Owner::find($id);
-        if ($request->file('logo') != null) {
-            if ($owner->logo != null) {
-                Storage::delete($owner->logo);
+        if (Auth::user() && Auth::user()->can('edit', Owner::class)) {
+            $request->validate([
+                'name' => 'required'
+            ]);
+            $owner = Owner::find($id);
+            if ($request->file('logo') != null) {
+                if ($owner->logo != null) {
+                    Storage::delete($owner->logo);
+                }
+                $path = ($request->logo)->store("images/owners/$request->name");
+            } else {
+                $path = $owner->logo;
             }
-            $path = ($request->logo)->store("images/owners/$request->name");
+            $owner->logo = $path;
+            $owner->name = $request->name;
+            $owner->legal_entity = $request->legal_entity;
+            $owner->timestamps = false;
+            $owner->save();
+            return redirect()->route('owner.index')->with('successMsg', 'Country has been edited successfully');
         } else {
-            $path = $owner->logo;
+            return redirect()->route('owner.index')->with('successMsg', 'Tenant has been edited successfully');
         }
-        $owner->logo=$path;
-        $owner->name = $request->name;
-        $owner->legal_entity = $request->legal_entity;
-        $owner->timestamps = false;
-        $owner->save();
-        return redirect()->route('owner.index')->with('successMsg', 'Country has been edited successfully');
     }
 
     /**
@@ -126,10 +152,15 @@ class OwnerController extends Controller
      * @param \App\Models\Owner $owner
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Owner $owner)
+    public
+    function destroy(Owner $owner)
     {
-        Storage::delete($owner->logo);
-        $owner->delete();
-        return redirect()->route('owner.index')->with('successMsg', 'Country has been deleted successfully');
+        if (Auth::user() && Auth::user()->can('edit', Owner::class)) {
+            Storage::delete($owner->logo);
+            $owner->delete();
+            return redirect()->route('owner.index')->with('successMsg', 'Country has been deleted successfully');
+        } else {
+            return redirect()->route('owner.index')->with('successMsg', 'Tenant has been edited successfully');
+        }
     }
 }

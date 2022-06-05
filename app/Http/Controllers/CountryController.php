@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Routing\Route;
 
@@ -31,7 +32,10 @@ class CountryController extends Controller
      */
     public function create()
     {
-        return view('countries.create');
+        if (Auth::user() && Auth::user()->can('create', Country::class))
+            return view('countries.create');
+        else
+            return redirect()->route('country.index');
     }
 
     /**
@@ -42,18 +46,22 @@ class CountryController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(self::VALIDATION_RULE);
-        $country = new Country();
-        $country->name = $request->name;
-        if ($request->file('flag') != null) {
-            $country->flag = ($request->flag)->store("images/flags/$country->name");
+        if (Auth::user() && Auth::user()->can('create', Country::class)) {
+            $request->validate(self::VALIDATION_RULE);
+            $country = new Country();
+            $country->name = $request->name;
+            if ($request->file('flag') != null) {
+                $country->flag = ($request->flag)->store("images/flags/$country->name");
+            } else {
+                $country->flag = "css/not_found_image.jpg";
+            }
+            $country->continent = $request->continent;
+            $country->timestamps = false;
+            $country->save();
+            return redirect()->route('country.index')->with('successMsg', 'Country has been created successfully');
         } else {
-            $country->flag = "css/not_found_image.jpg";
+            return redirect()->route('country.index')->with('successMsg', 'Tenant has been edited successfully');
         }
-        $country->continent = $request->continent;
-        $country->timestamps = false;
-        $country->save();
-        return redirect()->route('country.index')->with('successMsg', 'Country has been created successfully');
     }
 
     /**
@@ -64,17 +72,17 @@ class CountryController extends Controller
      */
     public function show(Country $country)
     {
-        $transports=$country->transports;
+        $transports = $country->transports;
         $top5 = [];
         if (count($transports) < 6) {
-            $top5=$transports;
+            $top5 = $transports;
         } else {
-            $numbers=array_rand(range(0,count($transports)-1),5);
-            foreach ($numbers as $num){
-                array_push($top5,$transports[$num]);
+            $numbers = array_rand(range(0, count($transports) - 1), 5);
+            foreach ($numbers as $num) {
+                array_push($top5, $transports[$num]);
             }
         }
-        return view('countries.show', compact('country'),compact('top5'));
+        return view('countries.show', compact('country'), compact('top5'));
     }
 
     /**
@@ -85,7 +93,11 @@ class CountryController extends Controller
      */
     public function edit(Country $country)
     {
-        return view('countries.edit', compact('country'));
+        if (Auth::user() && Auth::user()->can('edit', Country::class)) {
+            return view('countries.edit', compact('country'));
+        } else {
+            return redirect()->route('country.index')->with('successMsg', 'Tenant has been edited successfully');
+        }
     }
 
     /**
@@ -97,16 +109,20 @@ class CountryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate(self::VALIDATION_RULE);
-        $country = Country::find($id);
-        if ($request->file('flag') != null) {
-            $country->flag = ($request->flag)->store("images/flags/$country->name");
+        if (Auth::user() && Auth::user()->can('edit', Country::class)) {
+            $request->validate(self::VALIDATION_RULE);
+            $country = Country::find($id);
+            if ($request->file('flag') != null) {
+                $country->flag = ($request->flag)->store("images/flags/$country->name");
+            }
+            $country->name = $request->name;
+            $country->continent = $request->continent;
+            $country->timestamps = false;
+            $country->save();
+            return redirect()->route('country.index')->with('successMsg', 'Country has been edited successfully');
+        } else {
+            return redirect()->route('country.index')->with('successMsg', 'Tenant has been edited successfully');
         }
-        $country->name = $request->name;
-        $country->continent = $request->continent;
-        $country->timestamps = false;
-        $country->save();
-        return redirect()->route('country.index')->with('successMsg', 'Country has been edited successfully');
     }
 
     /**
@@ -117,8 +133,12 @@ class CountryController extends Controller
      */
     public function destroy(Country $country)
     {
-        Storage::delete($country->flag);
-        $country->delete();
-        return redirect()->route('country.index')->with('successMsg', 'Country has been deleted successfully');
+        if (Auth::user() && Auth::user()->can('edit', Country::class)) {
+            Storage::delete($country->flag);
+            $country->delete();
+            return redirect()->route('country.index')->with('successMsg', 'Country has been deleted successfully');
+        } else {
+            return redirect()->route('country.index')->with('successMsg', 'Tenant has been edited successfully');
+        }
     }
 }

@@ -57,11 +57,9 @@
                     <a class="nav-link" href="{{route('carBodyType.index')}}">Car body types</a>
                 </li>
                 @auth()
-                    @if(Auth::user()->can('view',\App\Models\Owner::class))
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('owner.index')}}">Owners</a>
-                        </li>
-                    @endif
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('owner.index')}}">Owners</a>
+                    </li>
                     @if(Auth::user()->can('view',\App\Models\Tenant::class))
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('tenant.index')}}">Tenants</a>

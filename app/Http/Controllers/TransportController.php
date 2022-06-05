@@ -50,7 +50,7 @@ class TransportController extends Controller
             $carBodyTypes = CarBodyType::all();
             return view('transports.create', ['countries' => $countries, 'owners' => $owners, 'carBodyTypes' => $carBodyTypes]);
         } else {
-            return redirect('transport');
+            return redirect()->route('transport.index')->with('fail', "You dont have permission");
         }
     }
 
@@ -83,7 +83,7 @@ class TransportController extends Controller
 
             return redirect()->route('transport.index')->with('successMsg', 'Transport has been created successfully');
         } else {
-            return redirect('transport');
+            return redirect()->route('transport.index')->with('fail', "You dont have permission");
         }
     }
 
@@ -112,7 +112,7 @@ class TransportController extends Controller
             $carBodyTypes = CarBodyType::all();
             return view('transports.edit', compact('transport'), ['countries' => $countries, 'owners' => $owners, 'carBodyTypes' => $carBodyTypes]);
         } else {
-            return redirect('transport');
+            return redirect()->route('transport.index')->with('fail', "You dont have permission");
         }
     }
 
@@ -148,7 +148,7 @@ class TransportController extends Controller
             $transport->update();
             return view('transports.show', compact('transport'));
         } else {
-            return redirect('transport');
+            return redirect()->route('transport.index')->with('fail', "You dont have permission");
         }
     }
 
@@ -178,7 +178,7 @@ class TransportController extends Controller
             $transport->delete();
             return redirect()->route('transport.index')->with('successMsg', 'Transport has been deleted successfully');
         } else {
-            return redirect('transport');
+            return redirect()->route('transport.index')->with('fail', "You dont have permission");
         }
     }
 

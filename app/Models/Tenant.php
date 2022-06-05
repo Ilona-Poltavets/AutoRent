@@ -9,7 +9,13 @@ class Tenant extends Model
 {
     use HasFactory;
 
-    public function rents(){
-        return $this->hasMany(Rent::class,'id_tenant', 'id');
+    public function rents()
+    {
+        return $this->hasMany(Rent::class, 'id_tenant', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }
