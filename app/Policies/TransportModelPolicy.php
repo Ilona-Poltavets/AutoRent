@@ -18,19 +18,26 @@ class TransportModelPolicy
     {
         //
     }
-    private function checkRight(User $user,string $right){
-        $permissionsArr=explode(';',$user->role->permissions);
-        return in_array($right,$permissionsArr);
+
+    private function checkRight(User $user, string $right)
+    {
+        $permissionsArr = explode(';', $user->role->permissions);
+        return in_array($right, $permissionsArr);
         //return $permissionsArr;
     }
 
-    public function edit(User $user){
-        return $this->checkRight($user,'edit_transport');
+    public function edit(User $user)
+    {
+        return $this->checkRight($user, 'edit_transport');
     }
-    public function create(User $user){
-        return $this->checkRight($user,'add_transport');
+
+    public function create(User $user)
+    {
+        return $this->checkRight($user, 'add_transport');
     }
-    public function delete(User $user){
-        return $this->checkRight($user,'delete_transport');
+
+    public function delete(User $user)
+    {
+        return $this->checkRight($user, 'delete_transport');
     }
 }

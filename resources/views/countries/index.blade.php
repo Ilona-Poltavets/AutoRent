@@ -15,7 +15,9 @@
         <thead class="table-dark">
         <tr>
             <th width="250">Flag</th>
-            <th>#</th>
+            @if(\Illuminate\Support\Facades\Auth::user() && \Illuminate\Support\Facades\Auth::user()->isAdmin())
+                <th>#</th>
+            @endif
             <th>Name</th>
             <th>Continent</th>
             <th></th>
@@ -25,18 +27,26 @@
         @foreach($countries as $country)
             <tr>
                 <td><img src="{{asset($country->flag)}}" alt="{{$country->name}}" class="flag"></td>
-                <td>{{$country->id}}</td>
+                @if(\Illuminate\Support\Facades\Auth::user() && \Illuminate\Support\Facades\Auth::user()->isAdmin())
+                    <td>{{$country->id}}</td>
+                @endif
                 <td>{{$country->name}}</td>
                 <td>{{$country->continent}}</td>
                 <td>
                     <div class="btn-group">
                         <a href="{{route('country.show',$country->id)}}" class="btn btn-info">Show</a>
-                        <a href="{{route('country.edit', $country->id)}}" class="btn btn-primary">Edit</a>
-                        <form action="{{route('country.destroy', $country->id)}}" method="post">
-                            @method('delete')
-                            @csrf
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
+                        @auth()
+                            @if(\Illuminate\Support\Facades\Auth::user()->can('edit',\App\Models\Country::class))
+                                <a href="{{route('country.edit', $country->id)}}" class="btn btn-primary">Edit</a>
+                            @endif
+                            @if(\Illuminate\Support\Facades\Auth::user()->can('delete',\App\Models\Country::class))
+                                <form action="{{route('country.destroy', $country->id)}}" method="post">
+                                    @method('delete')
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            @endif
+                        @endauth
                     </div>
                 </td>
             </tr>
@@ -44,28 +54,38 @@
         </tbody>
     </table>
     {!! $countries->links() !!}
-    <a href="{{route('country.create')}}" class="btn btn-success">Add</a>
+    @if(Auth::user() && \Illuminate\Support\Facades\Auth::user()->can('create',\App\Models\Country::class))
+        <a href="{{route('country.create')}}" class="btn btn-success">Add</a>
+    @endif
     <script>
         function buildCountryTable(countries) {
             const tbl = document.getElementById('table');
             for (var i = 0; i < countries.length; i++) {
                 var row = `<tr>
                             <td><img src="${countries[i].flag}" alt="${countries[i].name}" class="flag"></td>
-							<td>${countries[i].id}</td>
-							<td>${countries[i].name}</td>
+                            @if(\Illuminate\Support\Facades\Auth::user() && \Illuminate\Support\Facades\Auth::user()->isAdmin())
+                <td>${countries[i].id}</td>
+							@endif
+                <td>${countries[i].name}</td>
 							<td>${countries[i].continent}</td>
                             <td>
                                 <div class="btn-group">
                                     <a href="country/${countries[i].id}" class="btn btn-info">Show</a>
-                                    <a href="country/${countries[i].id}/edit" class="btn btn-primary">Edit</a>
-                                    <form action="country/${countries[i].id}" method="post">
+                                    @auth()
+                @if(\Illuminate\Support\Facades\Auth::user()->can('edit',\App\Models\Country::class))
+                <a href="country/${countries[i].id}/edit" class="btn btn-primary">Edit</a>
+                                    @endif
+                @if(\Illuminate\Support\Facades\Auth::user()->can('delete',\App\Models\Country::class))
+                <form action="country/${countries[i].id}" method="post">
                                         @method('delete')
                 @csrf
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
-        </div>
-    </td>
-    </tr>`
+            @endif
+                @endauth
+                </div>
+            </td>
+            </tr>`
                 tbl.innerHTML += row
             }
         }

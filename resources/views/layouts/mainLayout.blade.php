@@ -58,15 +58,23 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('carBodyType.index')}}">Car body types</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('owner.index')}}">Owners</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('tenant.index')}}">Tenants</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('rent.index')}}">Rents</a>
-                </li>
+                @auth()
+                    @if(Auth::user()->can('view',\App\Models\Owner::class))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('owner.index')}}">Owners</a>
+                        </li>
+                    @endif
+                    @if(Auth::user()->can('view',\App\Models\Tenant::class))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('tenant.index')}}">Tenants</a>
+                        </li>
+                    @endif
+                    @if(Auth::user()->can('view',\App\Models\Rent::class))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('rent.index')}}">Rents</a>
+                        </li>
+                    @endif
+                @endauth
             </ul>
         </div>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">

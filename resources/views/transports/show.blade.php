@@ -51,12 +51,17 @@
         </tr>
     </table>
     <div class="btn-group">
-        <a href="{{route('transport.edit',$transport->id)}}" class="btn btn-primary">Edit</a>
-        <form action="{{route('transport.destroy',$transport->id)}}" method="post">
-            @method('delete')
-            @csrf
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-        <a class="btn btn-success" href="{{route('rent.create',$transport->id)}}">Rent</a>
+        @if(Auth::user() && Auth::user()->can('edit',Transport::class))
+            <a href="{{route('transport.edit',$transport->id)}}" class="btn btn-primary">Edit</a>
+        @elseif(Auth::user() && Auth::user()->can('delete',Transport::class))
+            <form action="{{route('transport.destroy',$transport->id)}}" method="post">
+                @method('delete')
+                @csrf
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        @endif
+        @auth()
+            <a class="btn btn-success" href="{{route('rent.create',$transport->id)}}">Rent</a>
+        @endauth
     </div>
 @endsection

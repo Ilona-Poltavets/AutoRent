@@ -66,7 +66,8 @@ class OwnerController extends Controller
      */
     public function show(Owner $owner)
     {
-        $transports=$owner->transports;
+        $transports=DB::select("select * from dbo.getTransports('$owner->name')");
+        //dd($transports);
         $top5 = [];
         if (count($transports) < 6) {
             $top5=$transports;

@@ -10,7 +10,9 @@
     <table class="table table-hover">
         <thead class="table-dark">
         <tr>
-            <th>#</th>
+            @if(\Illuminate\Support\Facades\Auth::user() && \Illuminate\Support\Facades\Auth::user()->isAdmin())
+                <th>#</th>
+            @endif
             <th>Type</th>
             <th></th>
         </tr>
@@ -18,22 +20,32 @@
         <tbody>
         @foreach($types as $type)
             <tr>
-                <td>{{$type->id}}</td>
+                @if(\Illuminate\Support\Facades\Auth::user() && \Illuminate\Support\Facades\Auth::user()->isAdmin())
+                    <td>{{$type->id}}</td>
+                @endif
                 <td>{{$type->name}}</td>
                 <td>
                     <div class="btn-group">
                         <a href="{{route('carBodyType.show',$type->id)}}" class="btn btn-info">Show</a>
-                        <a href="{{route('carBodyType.edit', $type->id)}}" class="btn btn-primary">Edit</a>
-                        <form action="{{route('carBodyType.destroy',$type->id)}}" method="post">
-                            @method('delete')
-                            @csrf
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
+                        @auth()
+                            @if(\Illuminate\Support\Facades\Auth::user()->can('edit',\App\Models\CarBodyType::class))
+                                <a href="{{route('carBodyType.edit', $type->id)}}" class="btn btn-primary">Edit</a>
+                            @endif
+                            @if(\Illuminate\Support\Facades\Auth::user()->can('delete',\App\Models\CarBodyType::class))
+                                <form action="{{route('carBodyType.destroy',$type->id)}}" method="post">
+                                    @method('delete')
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            @endif
+                        @endauth
                     </div>
                 </td>
             </tr>
         @endforeach
         </tbody>
     </table>
-    <a href="{{route('carBodyType.create')}}" class="btn btn-success">Add</a>
+    @if(\Illuminate\Support\Facades\Auth::user() && \Illuminate\Support\Facades\Auth::user()->can('create',\App\Models\CarBodyType::class))
+        <a href="{{route('carBodyType.create')}}" class="btn btn-success">Add</a>
+    @endif
 @endsection

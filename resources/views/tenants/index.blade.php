@@ -14,7 +14,9 @@
     <table id="table" class="table table-hover">
         <thead class="table-dark">
         <tr>
-            <th>#</th>
+            @if(\Illuminate\Support\Facades\Auth::user() && \Illuminate\Support\Facades\Auth::user()->isAdmin())
+                <th>#</th>
+            @endif
             <th>Name</th>
             <th>Legal entity</th>
             <th></th>
@@ -23,7 +25,9 @@
         <tbody id="body">
         @foreach($tenants as $tenant)
             <tr>
-                <td>{{$tenant->id}}</td>
+                @if(\Illuminate\Support\Facades\Auth::user() && \Illuminate\Support\Facades\Auth::user()->isAdmin())
+                    <td>{{$tenant->id}}</td>
+                @endif
                 <td>{{$tenant->name}}</td>
                 <td>
                     @if($tenant->legal_entity==1)
@@ -35,12 +39,18 @@
                 <td>
                     <div class="btn-group">
                         <a href="{{route('tenant.show',$tenant->id)}}" class="btn btn-info">Show</a>
-                        <a href="{{route('tenant.edit', $tenant->id)}}" class="btn btn-primary">Edit</a>
-                        <form action="{{route('tenant.destroy',$tenant->id)}}" method="post">
-                            @method('delete')
-                            @csrf
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
+                        @auth()
+                            @if(\Illuminate\Support\Facades\Auth::user()->can('edit',\App\Models\Tenant::class))
+                                <a href="{{route('tenant.edit', $tenant->id)}}" class="btn btn-primary">Edit</a>
+                            @endif
+                            @if(\Illuminate\Support\Facades\Auth::user()->can('delete',\App\Models\Tenant::class))
+                                <form action="{{route('tenant.destroy',$tenant->id)}}" method="post">
+                                    @method('delete')
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            @endif
+                        @endauth
                     </div>
                 </td>
             </tr>
@@ -48,13 +58,17 @@
         </tbody>
     </table>
     {!! $tenants->links() !!}
-    <a href="{{route('tenant.create')}}" class="btn btn-success">Add</a>
+    @if(\Illuminate\Support\Facades\Auth::user() && \Illuminate\Support\Facades\Auth::user()->can('create',\App\Models\Tenant::class))
+        <a href="{{route('tenant.create')}}" class="btn btn-success">Add</a>
+    @endif
     <script>
         function buildTableTenant(tenants) {
             const tbl = document.getElementById('body');
             for (var i = 0; i < tenants.length; i++) {
                 var row = `<tr>
+@if(\Illuminate\Support\Facades\Auth::user() && \Illuminate\Support\Facades\Auth::user()->isAdmin())
                 <td>${tenants[i].id}</td>
+                @endif
                 <td>${tenants[i].name}</td>
                 <td>`;
                 if (tenants[i].legal_entity === '1') {
@@ -66,15 +80,21 @@
                 <td>
                     <div class="btn-group">
                         <a href="tenant/${tenants[i].id}" class="btn btn-info">Show</a>
-                        <a href="tenant/${tenants[i].id}/edit" class="btn btn-primary">Edit</a>
-                        <form action="owner/${tenants[i].id}" method="post">
+                        @auth()
+                @if(\Illuminate\Support\Facades\Auth::user()->can('edit',\App\Models\Tenant::class))
+                <a href="tenant/${tenants[i].id}/edit" class="btn btn-primary">Edit</a>
+                        @endif
+                @if(\Illuminate\Support\Facades\Auth::user()->can('delete',\App\Models\Tenant::class))
+                <form action="owner/${tenants[i].id}" method="post">
                             @method('delete')
                 @csrf
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
-        </div>
-    </td>
-</tr>`;
+            @endif
+                @endauth
+                </div>
+            </td>
+        </tr>`;
                 tbl.innerHTML += row;
             }
         }

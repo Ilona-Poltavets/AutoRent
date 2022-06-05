@@ -75,9 +75,8 @@ class TransportController extends Controller
                     else
                         $paths = $paths . ";" . $filename;
                 }
-            }
-            else{
-                $paths='css/not_found_image.jpg';
+            } else {
+                $paths = 'css/not_found_image.jpg';
             }
 
             DB::select("execute dbo.addTrasnportProc '" . $request->number . "', '" . $request->model . "', " . $request->mileage . ', ' . $request->owner_id . ', ' . $request->body_type_id . ', ' . $request->country_id . ", '" . $paths . "' ");
@@ -185,28 +184,32 @@ class TransportController extends Controller
 
     public function editMainPhoto(Request $request)
     {
-        $transport = Transport::find($request->id);
-        $images = explode(';', $transport->images);
+        if (Auth::user() && Auth::user()->can('edit', Transport::class)) {
+            $transport = Transport::find($request->id);
+            $images = explode(';', $transport->images);
 
-        $temp = $images[0];
-        $images[0] = $images[$request->mainIndex];
-        $images[$request->mainIndex] = $temp;
+            $temp = $images[0];
+            $images[0] = $images[$request->mainIndex];
+            $images[$request->mainIndex] = $temp;
 
-        $transport->images = implode(';', $images);
-        $transport->timestamps = false;
-        $transport->save();
+            $transport->images = implode(';', $images);
+            $transport->timestamps = false;
+            $transport->save();
+        }
     }
 
     public function deletePhoto(Request $request)
     {
-        $transport = Transport::find($request->id);
-        $images = explode(';', $transport->images);
+        if (Auth::user() && Auth::user()->can('edit', Transport::class)) {
+            $transport = Transport::find($request->id);
+            $images = explode(';', $transport->images);
 
-        Storage::delete($images[$request->mainIndex]);
-        unset($images[$request->mainIndex]);
+            Storage::delete($images[$request->mainIndex]);
+            unset($images[$request->mainIndex]);
 
-        $transport->images = implode(';', $images);
-        $transport->timestamps = false;
-        $transport->save();
+            $transport->images = implode(';', $images);
+            $transport->timestamps = false;
+            $transport->save();
+        }
     }
 }

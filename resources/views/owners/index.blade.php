@@ -17,7 +17,9 @@
     <table id="table" class="table table-hover">
         <thead class="table-dark">
         <tr>
-            <th>#</th>
+            @if(\Illuminate\Support\Facades\Auth::user() && \Illuminate\Support\Facades\Auth::user()->isAdmin())
+                <th>#</th>
+            @endif
             <th width="350">logo</th>
             <th>name</th>
             <th>Average of mileage</th>
@@ -27,7 +29,9 @@
         <tbody id="body">
         @foreach($owners as $owner)
             <tr>
-                <td>{{$owner->id}}</td>
+                @if(\Illuminate\Support\Facades\Auth::user() && \Illuminate\Support\Facades\Auth::user()->isAdmin())
+                    <td>{{$owner->id}}</td>
+                @endif
                 @if($owner->logo!=null)
                     <td align="center">
                         <img src="{{asset($owner->logo)}}" height="60">
@@ -46,12 +50,18 @@
                 <td>
                     <div class="btn-group">
                         <a href="{{route('owner.show',$owner->id)}}" class="btn btn-info">Show</a>
-                        <a href="{{route('owner.edit', $owner->id)}}" class="btn btn-primary">Edit</a>
-                        <form action="{{route('owner.destroy', $owner->id)}}" method="post">
-                            @method('delete')
-                            @csrf
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
+                        @auth()
+                            @if(\Illuminate\Support\Facades\Auth::user()->can('edit',\App\Models\Owner::class))
+                                <a href="{{route('owner.edit', $owner->id)}}" class="btn btn-primary">Edit</a>
+                            @endif
+                            @if(\Illuminate\Support\Facades\Auth::user()->can('delete',\App\Models\Owner::class))
+                                <form action="{{route('owner.destroy', $owner->id)}}" method="post">
+                                    @method('delete')
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            @endif
+                        @endauth
                     </div>
                 </td>
             </tr>
@@ -59,13 +69,19 @@
         </tbody>
     </table>
     {!! $owners->links() !!}
-    <a href="{{route('owner.create')}}" class="btn btn-success">Add</a>
+    @if(\Illuminate\Support\Facades\Auth::user()->can('delete',\App\Models\Owner::class))
+        <a href="{{route('owner.create')}}" class="btn btn-success">Add</a>
+    @endif
     <script>
         function buildTableOwner(owners) {
             const tbl = document.getElementById('body');
             for (var i = 0; i < owners.length; i++) {
-                var row = `<tr><td>${owners[i].id}</td>`;
-                if (owners[i].logo != null) {
+                var row = `<tr>
+@if(\Illuminate\Support\Facades\Auth::user() && \Illuminate\Support\Facades\Auth::user()->isAdmin())
+                <td>${owners[i].id}</td>
+                @endif`;
+                if
+                (owners[i].logo != null) {
                     row += `<td align="center">
                         <img src="${owners[i].logo}" height="60">
                     </td>`;
@@ -79,15 +95,21 @@
                 <td>
                     <div class="btn-group">
                         <a href="owner/${owners[i].id}" class="btn btn-info">Show</a>
-                        <a href="owner/${owners[i].id}/edit" class="btn btn-primary">Edit</a>
-                        <form action="owner/${owners[i].id}" method="post">
+                        @auth()
+                @if(\Illuminate\Support\Facades\Auth::user()->can('edit',\App\Models\Owner::class))
+                <a href="owner/${owners[i].id}/edit" class="btn btn-primary">Edit</a>
+                        @endif
+                @if(\Illuminate\Support\Facades\Auth::user()->can('delete',\App\Models\Owner::class))
+                <form action="owner/${owners[i].id}" method="post">
                             @method('delete')
                 @csrf
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
-        </div>
-    </td>
-</tr>`;
+            @endif
+                @endauth
+                </div>
+            </td>
+        </tr>`;
                 tbl.innerHTML += row;
             }
         }
