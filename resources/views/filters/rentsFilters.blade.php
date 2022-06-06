@@ -17,17 +17,16 @@
     </div>
 </li>
 
-@php(date_default_timezone_set('Europe/Kiev'))
 <li class="nav-item">
     <a id="owner" class="button">Date</a>
     <div id="dateBlock" class="filterBlock row">
         <div class="col my-2 ms-2">
-            <input id="dateStart" name="dateStart" type="number" class="form-control filterTime"
-                   placeholder="{{isset($rent)?$rent->data:($date = date('d.m.Y H:i', time()))}}">
+            <input id="dateStart" name="dateStart" type="text" class="form-control filterTime"
+                   placeholder="From">
         </div>
         <div class="col my-2 me-2">
-            <input id="dateEnd" name="dateEnd" type="number" class="form-control filterTime"
-                   placeholder="{{isset($rent)?$rent->data:($date = date('d.m.Y H:i', time()))}}">
+            <input id="dateEnd" name="dateEnd" type="text" class="form-control filterTime"
+                   placeholder="To">
         </div>
     </div>
 </li>

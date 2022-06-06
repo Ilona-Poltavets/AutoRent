@@ -13,7 +13,7 @@ class TenantController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -21,7 +21,7 @@ class TenantController extends Controller
             $data['tenants'] = Tenant::paginate(20);
             return view('tenants.index', $data);
         } else {
-            return redirect()->route(RouteServiceProvider::HOME)->with('fail', "You dont have permission");
+            return view(RouteServiceProvider::HOME)->with('fail', "You dont have permission");
         }
     }
 
@@ -56,7 +56,7 @@ class TenantController extends Controller
             $tenant = new Tenant();
             $tenant->name = $request->name;
             $tenant->legal_entity = $request->legal_entity;
-            $tenant->user_id = $request->user;
+            //$tenant->user_id = $request->user;
             $tenant->timestamps = false;
             $tenant->save();
             return redirect()->route('tenant.index')->with('successMsg', 'Tenant has been created successfully');
@@ -114,7 +114,7 @@ class TenantController extends Controller
             $tenant = Tenant::find($id);
             $tenant->name = $request->name;
             $tenant->legal_entity = $request->legal_entity;
-            $tenant->user_id = $request->user;
+            //$tenant->user_id = $request->user;
             $tenant->timestamps = false;
             $tenant->save();
             return redirect()->route('tenant.index')->with('successMsg', 'Tenant has been edited successfully');

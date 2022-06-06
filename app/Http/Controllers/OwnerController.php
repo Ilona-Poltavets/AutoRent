@@ -25,7 +25,7 @@ class OwnerController extends Controller
             }
             return view('owners.index', $data);
         } else {
-            return redirect()->route(RouteServiceProvider::HOME);
+            return view(RouteServiceProvider::HOME)->with('fail', "You dont have permission");
         }
     }
 

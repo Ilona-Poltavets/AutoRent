@@ -4,8 +4,8 @@
         <label for="date" class="col-2 col-form-label">Start date</label>
         <div class="col-10">
             @php(date_default_timezone_set('Europe/Kiev'))
-            <input id="datetime" autocomplete="off" name="date" class="default" type="text"
-                   value="{{isset($rent)?$rent->data:($date = date('d.m.Y H:i', time()))}}">
+            <input id="datetime" autocomplete="off" name="date" class="{{isset($rent)? 'default2' : 'default'}}" type="text"
+                   value="{{isset($rent)?date('Y-m-d H:i',strtotime($rent->date)):($date = date('Y-m-d H:i', time()))}}">
         </div>
     </div>
 
@@ -63,7 +63,7 @@
     <div class="form-group row my-2">
         <label for="tenant" class="col-2 col-form-label">Tenant</label>
         <div class="col-10 autocomplete">
-            <input name="tenant" list="tenants" class="form-control">
+            <input name="tenant" list="tenants" class="form-control" @if(isset($rent)) value="{{$rent->tenant->name}}"@endif>
             <datalist id="tenants">
                 <select>
                     @foreach($tenants as $tenant)

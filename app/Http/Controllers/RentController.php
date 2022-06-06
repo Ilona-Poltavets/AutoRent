@@ -33,7 +33,7 @@ class RentController extends Controller
             $rents = Rent::paginate(20);
             return view('rents.index', ['owners' => $owners, 'rents' => $rents]);
         } else {
-            return redirect()->route(RouteServiceProvider::HOME)->with('fail', "You dont have permission");
+            return view(RouteServiceProvider::HOME)->with('fail', "You dont have permission");
         }
     }
 
@@ -44,7 +44,7 @@ class RentController extends Controller
      */
     public function create($transportId)
     {
-        if (Auth::user() && Auth::user()->can('create', Rent::class)) {
+        if (Auth::user()) {
             $owners = DB::select(DB::raw('select owners.id, owners.name
                                                 from owners inner join transports on transports.owner_id=owners.id
                                                 where transports.id=' . $transportId));
@@ -68,10 +68,9 @@ class RentController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user() && Auth::user()->can('create', Rent::class)) {
+        if (Auth::user()) {
             $request->validate(self::VALIDATION_RULE);
             $tenant = DB::select("select top 1 * from tenants where name='$request->tenant'");
-            $transport = Transport::find($request->id_transport);
             $rent = new Rent();
             $rent->date = $request->date;
             $rent->id_transport = $request->id_transport;
@@ -80,9 +79,6 @@ class RentController extends Controller
             $rent->id_owner = $request->id_owner;
             $rent->timestamps = false;
             $rent->save();
-            $transport->rental_times += 1;
-            $transport->timestamps = false;
-            $transport->save();
             return redirect()->route('rent.index')->with('successMsg', 'Rent has been created successfully');
         } else {
             return redirect()->route('rent.index')->with('fail', "You dont have permission");

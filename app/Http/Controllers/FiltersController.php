@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Owner;
 use App\Models\Tenant;
 use App\Models\Transport;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -77,10 +78,10 @@ class FiltersController extends Controller
                 $data->whereRaw('id_owner IN (' . $owners . ')');
             }
             if ($request->minDate != '') {
-                $data->whereRaw('date<' . $request->minDate);
+                $data->whereDate('date', '>=', Carbon::parse($request->minDate)->format('Y-m-d H:i'));
             }
             if ($request->maxDate != '') {
-                $data->whereRaw('date<' . $request->maxDate);
+                $data->whereDate('date', '<=', Carbon::parse($request->maxDate)->format('Y-m-d H:i'));
             }
             if ($request->minPeriod != '') {
                 $data->whereRaw('rental_period>' . $request->minPeriod);

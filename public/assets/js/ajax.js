@@ -41,7 +41,6 @@ $(document).ready()
 
     function filterRent(owners){
         owners=JSON.stringify(owners);
-        console.log(owners);
         let minDate=document.getElementById('dateStart').value;
         let maxDate=document.getElementById('dateEnd').value;
         let minPeriod=document.getElementById('rentalPeriodMin').value;

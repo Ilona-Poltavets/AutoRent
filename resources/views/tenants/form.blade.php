@@ -19,6 +19,7 @@
         </div>
     </div>
 
+    {{--
     <div class="form-group row my-2">
         <label for="user" class="col-2 col-form-label">User</label>
         <div class="col-10 autocomplete">
@@ -26,12 +27,12 @@
             <datalist id="users">
                 <select>
                     @foreach($users as $user)
-                        <option value="{{$user->name}}"></option>
-                    @endforeach
-                </select>
-            </datalist>
-        </div>
-    </div>
+                    <option value="{{$user->name}}"></option>
+    @endforeach
+        </select>
+    </datalist>
+</div>
+</div>--}}
 
     <div class="row my-2">
         <div class="offset-10 col-1">

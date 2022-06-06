@@ -32,10 +32,10 @@ Route::controller(RentController::class)->group(function () {
     Route::get('rents', 'index')->name('rent.index');
     Route::get('rents/{transportId}/create', 'create')->name('rent.create');
     Route::get('rents/{rent}', 'show')->name('rent.show');
-    Route::get('rents/{rent}/edit', 'edit')->name('rent.edit');
+    Route::get('rents/{rent}/edit', 'edit')->name('rent.edit')->can('edit',\App\Models\Rent::class);
     Route::post('rents', 'store')->name('rent.store');
-    Route::put('rents', 'update')->name('rent.update');
-    Route::delete('rents/{rent}', 'destroy')->name('rent.destroy');
+    Route::put('rents', 'update')->name('rent.update')->can('edit',\App\Models\Rent::class);
+    Route::delete('rents/{rent}', 'destroy')->name('rent.destroy')->can('delete',\App\Models\Rent::class);
 });
 
 Route::get('currently_rented', 'App\Http\Controllers\TransportController@create_view')->name('currently_rented');

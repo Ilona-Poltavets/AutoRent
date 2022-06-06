@@ -1,19 +1,27 @@
 $(function () {
     $(".default").datetimepicker({
-        format: 'dd.mm.yyyy hh:ii',
+        format: 'yyyy-mm-dd hh:ii',
         todayHighlight: true,
         startDate: '+0d',
         todayBtn: true,
         weekStart: 1,
-        language: 'ua',
+        language: 'en',
     });
-    $(".filterTime").datetimepicker({
-        format: 'dd.mm.yyyy hh:ii',
+    $(".default2").datetimepicker({
+        format: 'yyyy-mm-dd hh:ii',
         todayHighlight: true,
         //startDate: '+0d',
         todayBtn: true,
         weekStart: 1,
-        language: 'ua',
+        language: 'en',
+    });
+    $(".filterTime").datetimepicker({
+        format: 'yyyy-mm-dd hh:ii',
+        todayHighlight: true,
+        //startDate: '+0d',
+        todayBtn: true,
+        weekStart: 1,
+        language: 'en',
     });
 });
 

@@ -74,13 +74,13 @@
                 <td>${rents[i].owner}</td>
                 <td>
                     <div class="btn-group">
-                        <a href="rent/${rents[i].id}" class="btn btn-info">Show</a>
+                        <a href="rents/${rents[i].id}" class="btn btn-info">Show</a>
                         @auth()
                 @if(\Illuminate\Support\Facades\Auth::user()->can('edit',\App\Models\Rent::class))
-                        <a href="rent/${rents[i].id}/edit" class="btn btn-primary">Edit</a>
+                        <a href="rents/${rents[i].id}/edit" class="btn btn-primary">Edit</a>
                         @endif
                 @if(\Illuminate\Support\Facades\Auth::user()->can('delete',\App\Models\Rent::class))
-                        <form action="rent/${rents[i].id}" method="post">
+                        <form action="rents/${rents[i].id}" method="post">
                             @method('delete')
                 @csrf
                 <button type="submit" class="btn btn-danger">Delete</button>

@@ -104,7 +104,7 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <a href="{{route('tenant.edit', 1)}}">History</a>
+                            {{--<a href="{{route('tenant.edit', 1)}}">History</a>--}}
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
